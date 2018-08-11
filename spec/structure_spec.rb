@@ -54,3 +54,31 @@ describe "Sub_Category" do
         expect(pizzas.items).to include(gf_pizza)
     end
 end
+
+describe "Item" do
+    it "has @@all and stores it self" do
+        expect(Item.all).to include(gf_pizza)
+    end
+
+    it "belongs to a Sub_Category" do
+        expect(gf_pizza.sub_category).to_equal pizzas
+    end
+
+    it "belongs to a Category if no Sub_Category" do
+        expect(gf_pizza.category).to_equal frozen if Sub_Category == nil
+    end
+
+    it "Belongs to a Department through Category/Sub_Category" do
+        expect(gf_pizza.department).to_equal grocery
+    end
+
+    #TODO: Tests below
+
+    it "Has last_received date stored if entered manually" do
+
+    end
+
+    it "Has a unique SKU created from SKUMaker Class" do
+        expect(Items.find_by_SKU(gf_pizza.sku)).to_equal gf_pizza
+    end
+end
