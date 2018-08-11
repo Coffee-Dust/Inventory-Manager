@@ -13,6 +13,9 @@ module ENVIRONMENTS
           when "rspec"
             puts "Choose what file you want in numbered form as it lists in the directory."
             rspec(gets.strip.to_i)
+          when "test"
+            puts "Choose what file you want in numbered form as it lists in the directory."
+            rspec(gets.strip.to_i)
           when "list"
             list
           when "clear"
@@ -37,6 +40,7 @@ module ENVIRONMENTS
   ┴└─└─┘┴─┘└─┘┴ ┴─┴┘┴┘└┘└─┘ooo                                                                                          
       "
       # load_all "./config" if Dir.exists?("./config")
+      load_all "./spec" if Dir.exists?("./spec")
       load_all "./app" if Dir.exists?("./app")
       load_all "./lib" if Dir.exists?("./lib")
       load_all "./*.rb" if Dir.entries(".").include?(/\.rb/)
@@ -48,11 +52,13 @@ module ENVIRONMENTS
       files.each do |file|
         load_file << File.basename(file)
       end
+      RSpec.reset
       RSpec::Core::Runner.run(["spec/#{load_file[file_number + 2]}"], $stderr, $stdout)
+      RSpec.reset
     end
 
     def list
-      list = ["pry", "reload", "rspec"]
+      list = ["pry", "reload", "rspec", "test"]
       list.each.with_index do |item, index|
         puts "#{index + 1}. #{item}"
       end
