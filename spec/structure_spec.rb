@@ -1,12 +1,27 @@
 require "spec_helper"
+begin
+    grocery = Department.create_from_hash({name: "Grocery"})
+rescue
+    puts "Deparment err."
+end
 
-grocery = Department.create_from_hash({name: "Grocery"})
+begin
+    frozen = Category.create_from_hash({name: "Frozen Foods", department: grocery})
+rescue
+    puts "Category err."
+end
 
-frozen = Category.create_from_hash({name: "Frozen Foods", department: grocery})
+begin
+    pizzas = Sub_Category.create_from_hash({name: "Frozen Pizza's", category: frozen})
+rescue
+    puts "Sub_Category err."
+end
 
-pizzas = Sub_Category.create_from_hash({name: "Frozen Pizza's", category: frozen})
-
-gf_pizza = Item.create_from_hash({department: grocery, category: frozen, sub_category: pizzas, brand_name: "Udi's", name: "Udi's gluten free pepperioni pizza", weight: "5oz", quantity: 120})
+begin
+    gf_pizza = Item.create_from_hash({department: grocery, category: frozen, sub_category: pizzas, brand_name: "Udi's", name: "Udi's gluten free pepperioni pizza", weight: "5oz", quantity: 120})
+rescue
+    puts "Item err."
+end
 
 describe "Department" do
     it "has @@all and stores it self" do
