@@ -1,6 +1,7 @@
 class Category
     @@all = []
     attr_accessor :name, :department, :sub_categories, :items
+
     def initialize
         
     end
@@ -16,6 +17,19 @@ class Category
             end
             instance.save
         end
+    end
+
+    def department=(department)
+        @department = department
+        department.categories << self
+    end
+
+    def save
+        @@all << self
+    end
+
+    def self.all
+        @@all
     end
 
 end
