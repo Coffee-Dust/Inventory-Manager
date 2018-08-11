@@ -3,7 +3,7 @@ require_relative "../config/environment.rb"
 RSpec.configure do |config|
   config.order = :default
   config.before(:each) do
-    ["Department", "Category", "SubCategory", "Item"].each do |class_name|
+    ["Department", "Category", "Sub_Category", "Item"].each do |class_name|
       if Kernel.const_defined?(class_name)
         klass = Kernel.const_get(class_name)
         if klass.respond_to?(:destroy_all)
