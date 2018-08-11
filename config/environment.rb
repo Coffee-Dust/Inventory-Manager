@@ -25,3 +25,7 @@ puts '
 
 #Chose which environment you want to load.
 include ENVIRONMENTS::DEV
+
+if ENV["APP_ENV"] == "DEV"
+  start_dev_CLI
+end
