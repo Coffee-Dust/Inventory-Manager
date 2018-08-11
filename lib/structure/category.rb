@@ -1,9 +1,11 @@
 class Category
     @@all = []
-    attr_accessor :name, :department, :sub_categories, :items
+    attr_accessor :name, :department
+    attr_reader :sub_categories, :items
 
     def initialize
-        
+        @sub_categories = []
+        @items = []
     end
 
     def self.create_from_hash(hash)
@@ -22,6 +24,14 @@ class Category
     def department=(department)
         @department = department
         department.categories << self
+    end
+
+    def sub_categories
+        return nil if @sub_categories == []
+    end
+
+    def items
+        return nil if @items == []
     end
 
     def save
