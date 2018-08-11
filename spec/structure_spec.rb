@@ -1,26 +1,30 @@
 require "spec_helper"
 begin
     grocery = Department.create_from_hash({name: "Grocery"})
-rescue
-    puts "Deparment err."
+rescue => error
+    Quorra.speak_error(error)
+    puts error
 end
 
 begin
     frozen = Category.create_from_hash({name: "Frozen Foods", department: grocery})
-rescue
-    puts "Category err."
+rescue => error
+    Quorra.speak_error(error)
+    puts "#{error}"
 end
 
 begin
     pizzas = Sub_Category.create_from_hash({name: "Frozen Pizza's", category: frozen})
-rescue
-    puts "Sub_Category err."
+rescue => error
+    Quorra.speak_error(error)
+    puts error
 end
 
 begin
     gf_pizza = Item.create_from_hash({department: grocery, category: frozen, sub_category: pizzas, brand_name: "Udi's", name: "Udi's gluten free pepperioni pizza", weight: "5oz", quantity: 120})
-rescue
-    puts "Item err."
+rescue => error
+    Quorra.speak_error(error)
+    puts error
 end
 
 describe "Department" do
