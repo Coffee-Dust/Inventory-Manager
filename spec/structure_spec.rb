@@ -14,7 +14,7 @@ describe "Department" do
     end
 
     it "has many categories" do
-        expect(grocery.categories[0]).to_equal frozen
+        expect(grocery.categories[0]).to eq frozen
     end
 
     it "has many Sub_Categorys/items through categories" do
@@ -29,7 +29,7 @@ describe "Category" do
     end
 
     it "belongs to a Department" do
-        expect(frozen.department).to_equal grocery
+        expect(frozen.department).to eq grocery
     end
 
     it "has many SubCategorys/items" do
@@ -47,7 +47,7 @@ describe "Sub_Category" do
     end
 
     it "Belongs to a Category" do
-        expect(pizzas.category).to_equal frozen
+        expect(pizzas.category).to eq frozen
     end
 
     it "Has many Items" do
@@ -61,15 +61,15 @@ describe "Item" do
     end
 
     it "belongs to a Sub_Category" do
-        expect(gf_pizza.sub_category).to_equal pizzas
+        expect(gf_pizza.sub_category).to eq pizzas
     end
 
     it "belongs to a Category if no Sub_Category" do
-        expect(gf_pizza.category).to_equal frozen if Sub_Category == nil
+        expect(gf_pizza.category).to eq frozen if Sub_Category == nil
     end
 
     it "Belongs to a Department through Category/Sub_Category" do
-        expect(gf_pizza.department).to_equal grocery
+        expect(gf_pizza.department).to eq grocery
     end
 
     #TODO: Tests below
@@ -79,6 +79,6 @@ describe "Item" do
     end
 
     it "Has a unique SKU created from SKUMaker Class" do
-        expect(Items.find_by_SKU(gf_pizza.sku)).to_equal gf_pizza
+        expect(Items.find_by_SKU(gf_pizza.sku)).to eq gf_pizza
     end
 end
