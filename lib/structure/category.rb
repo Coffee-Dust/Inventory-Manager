@@ -1,8 +1,7 @@
 class Category
     @@all = []
     attr_accessor :name, :department
-    attr_reader :sub_categories, :items
-
+    
     def initialize
         @sub_categories = []
         @items = []
@@ -27,11 +26,19 @@ class Category
     end
 
     def sub_categories
-        return nil if @sub_categories == []
+        @sub_categories == [] ? nil : @sub_categories
     end
 
     def items
-        return nil if @items == []
+        @items == [] ? nil : @items
+    end
+
+    def add_sub_categories(sub_cat)
+        @sub_categories << sub_cat
+    end
+
+    def add_items(item)
+        @items << item
     end
 
     def save
