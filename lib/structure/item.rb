@@ -37,4 +37,12 @@ class Item
         end
     end
 
+    def self.find_by_SKU(sku)
+        self.all.detect { |i| i.sku == sku }
+    end
+
+    def find_by_brand(brand)
+        self.all.detect { |i| i.brand_name == brand }
+    end
+
 end#endof class
