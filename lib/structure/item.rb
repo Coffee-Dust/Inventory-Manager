@@ -41,7 +41,7 @@ class Item
         self.all.detect { |i| i.sku == sku }
     end
 
-    def find_by_brand(brand)
+    def self.find_by_brand(brand)
         self.all.detect { |i| i.brand_name == brand }
     end
 
