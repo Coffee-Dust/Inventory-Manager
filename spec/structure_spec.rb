@@ -1,29 +1,25 @@
-require "spec_helper"
+require_relative "./spec_helper.rb"
 begin
     grocery = Department.create_from_hash({name: "Grocery"})
 rescue => error
-    Quorra.speak_error(error)
     puts error
 end
 
 begin
     frozen = Category.create_from_hash({name: "Frozen Foods", department: grocery})
 rescue => error
-    Quorra.speak_error(error)
     puts "#{error}"
 end
 
 begin
     pizzas = Sub_Category.create_from_hash({name: "Frozen Pizza's", category: frozen})
 rescue => error
-    Quorra.speak_error(error)
     puts error
 end
 
 begin
     gf_pizza = Item.create_from_hash({department: grocery, category: frozen, sub_category: pizzas, brand_name: "Udi's", name: "Udi's gluten free pepperioni pizza", weight: "5oz", quantity: 120})
 rescue => error
-    Quorra.speak_error(error)
     puts error
 end
 
@@ -93,11 +89,11 @@ describe "Item" do
 
     #TODO: Tests below
 
-    it "Has last_received date stored if entered manually" do
+    # it "Has last_received date stored if entered manually" do
 
-    end
+    # end
 
-    it "Has a unique SKU created from SKUMaker Class" do
-        expect(Items.find_by_SKU(gf_pizza.sku)).to eq gf_pizza
-    end
+    # it "Has a unique SKU created from SKUMaker Class" do
+    #     expect(Items.find_by_SKU(gf_pizza.sku)).to eq gf_pizza
+    # end
 end
