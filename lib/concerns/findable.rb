@@ -6,7 +6,7 @@ module Findable
                 begin
                     instance.send("#{key}=", value) 
                 rescue
-                    puts "Could not find method#{key}= or #{self}"
+                    puts "Could not find method #{key}= for #{self}."
                 end
             end
         end
