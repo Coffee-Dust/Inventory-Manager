@@ -2,25 +2,26 @@ class Sub_Category
 
     extend Storable::Class
     include Storable::Instance
-    
+    extend Findable
+
     attr_accessor :name, :items
     attr_reader :category
     def initialize
         @items  = []
     end
 
-    def self.create_from_hash(hash)
-        self.new.tap do |instance|
-            hash.each do |key, value|
-                begin
-                   instance.send("#{key}=", value) 
-                rescue
-                    puts "Could not find method#{key}= for #{self}"
-                end
-            end
-            instance.save
-        end
-    end
+    # def self.create_from_hash(hash)
+    #     self.new.tap do |instance|
+    #         hash.each do |key, value|
+    #             begin
+    #                instance.send("#{key}=", value) 
+    #             rescue
+    #                 puts "Could not find method#{key}= for #{self}"
+    #             end
+    #         end
+    #         instance.save
+    #     end
+    # end
 
     def category=(cat)
         @category = cat
