@@ -11,10 +11,12 @@ module ENVIRONMENTS
           when "reload"
             reload!
           when "rspec"
-            puts "Choose what file you want in numbered form as it lists in the directory."
+            puts "Type the number of the file you want to test as listed."
+            list_rspec_dir
             rspec(gets.strip.to_i)
           when "test"
-            puts "Choose what file you want in numbered form as it lists in the directory."
+            puts "Type the number of the file you want to test as listed."
+            list_rspec_dir
             rspec(gets.strip.to_i)
           when "list"
             list
@@ -47,6 +49,15 @@ module ENVIRONMENTS
       load_all "./spec" if Dir.exists?("./spec")
     end
 
+    def list_rspec_dir
+      load_file = []
+      files = Dir["./spec/*"]
+      files.each do |file|
+        load_file << File.basename(file)
+      end
+      load_file.each.with_index { |file, i| puts "#{i + 1}. #{file}"}
+    end
+
     def rspec(file_number)
       load_file = []
       files = Dir["./spec/*"]
@@ -54,7 +65,7 @@ module ENVIRONMENTS
         load_file << File.basename(file)
       end
       RSpec.reset
-      RSpec::Core::Runner.run(["spec/#{load_file[file_number + 2]}"], $stderr, $stdout)
+      RSpec::Core::Runner.run(["spec/#{load_file[file_number - 1]}"], $stderr, $stdout)
       RSpec.reset
     end
 
