@@ -12,7 +12,7 @@ module Storable
             base.class_variable_set("@@all", [])
         end
 
-        def self.all
+        def all
             self.class_variable_get("@@all")
         end
     end
