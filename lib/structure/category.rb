@@ -1,5 +1,8 @@
 class Category
-    @@all = []
+
+    extend Storable::Class
+    include Storable::Instance
+
     attr_accessor :name, :department
     
     def initialize
@@ -39,14 +42,6 @@ class Category
 
     def add_items(item)
         @items << item
-    end
-
-    def save
-        @@all << self
-    end
-
-    def self.all
-        @@all
     end
 
 end

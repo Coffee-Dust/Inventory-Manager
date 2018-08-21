@@ -1,5 +1,8 @@
 class Sub_Category
-    @@all = []
+
+    extend Storable::Class
+    include Storable::Instance
+    
     attr_accessor :name, :items
     attr_reader :category
     def initialize
@@ -28,11 +31,11 @@ class Sub_Category
         @items << item
     end
 
-    def save
-        @@all << self
-    end
+    # def save
+    #     @@all << self
+    # end
 
-    def self.all
-        @@all
-    end
+    # def self.all
+    #     @@all
+    # end
 end

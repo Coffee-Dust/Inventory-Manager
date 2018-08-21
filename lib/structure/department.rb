@@ -1,5 +1,8 @@
 class Department
-    @@all = []
+
+    extend Storable::Class
+    include Storable::Instance
+
     attr_accessor :name, :categories
     def initialize
         self.categories = []
@@ -17,12 +20,5 @@ class Department
             instance.save
         end
     end
-
-    def save
-        @@all << self
-    end
-
-    def self.all
-        @@all
-    end
+    
 end

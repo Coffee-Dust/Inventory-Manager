@@ -1,5 +1,8 @@
 class Item
-    @@all = []
+    
+    extend Storable::Class
+    include Storable::Instance
+
     attr_accessor :name, :brand_name, :desc, :weight, :quantity, :sku, :last_received
     attr_reader :sub_category
 
@@ -44,14 +47,6 @@ class Item
         else
             @category
         end
-    end
-
-    def save
-        @@all << self
-    end
-
-    def self.all
-        @@all
     end
 
 end#endof class
