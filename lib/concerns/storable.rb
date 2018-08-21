@@ -15,6 +15,10 @@ module Storable
         def all
             self.class_variable_get("@@all")
         end
+
+        def destory_all
+            self.all.clear
+        end
     end
     
 end
