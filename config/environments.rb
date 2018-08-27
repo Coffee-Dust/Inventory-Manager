@@ -2,6 +2,7 @@ module ENVIRONMENTS
   module DEV
 
     def start_dev_CLI
+      startup_sound
       puts "Welcome to the Development Environment.\nPlease input a command!\nUse 'list' to view commands."
       input = gets.strip
       while input != "exit"
@@ -41,6 +42,7 @@ module ENVIRONMENTS
   ├┬┘├┤ │  │ │├─┤ │││││││ ┬   
   ┴└─└─┘┴─┘└─┘┴ ┴─┴┘┴┘└┘└─┘ooo                                                                                          
       "
+      startup_sound
       # load_all "./config" if Dir.exists?("./config")
       load_all "./lib/concerns" if Dir.exists?("./lib/concerns")
       load_all "./app" if Dir.exists?("./app")
@@ -79,6 +81,12 @@ module ENVIRONMENTS
     def clear_terminal
       100.times do
         puts "\n"
+      end
+    end
+
+    def startup_sound
+      Thread.new do
+        `afplay ~/Music/randomSounds/coffee_machine.mp3`
       end
     end
 
