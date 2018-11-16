@@ -51,12 +51,16 @@ class Scraper
     end
 
     def get_sub_categories_for_category(link)
-        #go into the next link, and check if it has #NutritionalFacts in it, if it doesnt its a sub_category...
-        site = Nokogiri::HTML(open("http://www.publix.com#{link}"))
-        sub_categories = []
+        #this is checking if the link has publix, since link to product pages contain the full link.
+        if link.include? "publix.com"
 
-        if site.css("#NutritionalFacts").empty?
-            #Its not a item.
+            return nil
+
+        else
+            #it does not contain a full link, so its a categories page
+            site = Nokogiri::HTML(open("http://www.publix.com#{link}"))
+            sub_categories = []
+            
             site.css(".category-pod").each { |pod|
                 sub_category_hash = {}
                 item_link = pod.css("a").attribute("href").value.strip
@@ -66,14 +70,13 @@ class Scraper
 
                 sub_categories << sub_category_hash
             }
+
             return sub_categories
-        else
-            return nil
         end
     end
 
     def get_items_for_link(link)
-        
+
     end
 
     def start_load_timer(start)
