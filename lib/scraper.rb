@@ -12,10 +12,12 @@ class Scraper
         html = open("http://www.publix.com/all-products/")
         publix = Nokogiri::HTML(html)
 
+        #Scraping link to department
         publix.css(".category-pod").each { |pod|
             department_links << pod.css("a").attribute("href").value.strip
         }
 
+        #Sends that data to create_data_entry_for(department) for each department pod.
         department_links.each.with_index do |department, i|
             if i > 4
                 @database << {"department#{i}" => create_data_entry_for(department)}
@@ -27,8 +29,8 @@ class Scraper
     end
 
     def create_data_entry_for(link)
-        #it will get everything for the one entry or department and wrap it on top of the the database hash
-        #Named this way just for the fun of saying it <3
+        #Creates data entry and adds children to the parent hash.
+
         hash_holder = {}
         site = Nokogiri::HTML(open("http://www.publix.com#{link}"))
 
@@ -88,11 +90,12 @@ class Scraper
                 item_hash[:title] = product.css(".fda-title").text.strip
                 item_hash[:weight] = product.css(".size-description").text.strip
 
+                # This was to get item desc, but opening a new webpage for each item would of taken, years...
+                
                 # item_link = product.css("div div div div div div a").attribute("href").value.strip
                 # item_site = Nokogiri::HTML(open("http://www.publix.com#{item_link}"))
-
                 # item_hash[:desc] = item_site.css("#content_0_OverviewRepeater_OverviewText_0 p").text.strip
-
+                
                 items << item_hash
             }
 
