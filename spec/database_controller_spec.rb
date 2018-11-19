@@ -74,7 +74,7 @@ describe "Database_Controller" do
     end
 
     it "if loading from scraper, it adds a random quantity, and SKU" do
-        expect(Item.find_by_name("Publix Deli Onion Rings").quantity).to be Integer
+        expect(Item.find_by_name("Specialty Mini Fruit Tarts 6ct").quantity).to be Integer
 
         expect(Item.find_by_name("Chocolate Chip Message Cookie").SKU).to_not be nil
     end
