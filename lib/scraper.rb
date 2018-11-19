@@ -51,16 +51,13 @@ class Scraper
     end
 
     def get_sub_categories_for_category(link)
-        #this is checking if the link has publix, since link to product pages contain the full link.
-        if link.include? "publix.com"
+        # This is checking if the link has publix, since link to product pages contain the full link.
+        if !link.include?("publix.com")
 
-            return nil
-
-        else
             #it does not contain a full link, so its a categories page
             site = Nokogiri::HTML(open("http://www.publix.com#{link}"))
             sub_categories = []
-            
+
             site.css(".category-pod").each { |pod|
                 sub_category_hash = {}
                 item_link = pod.css("a").attribute("href").value.strip
@@ -72,11 +69,38 @@ class Scraper
             }
 
             return sub_categories
+
+        else
+            return nil
         end
     end
 
     def get_items_for_link(link)
 
+        if link.include?("publix.com")
+            puts "#get_item_for_link received this link: #{link}"
+            site = Nokogiri::HTML(open("#{link}"))
+            items = []
+
+            site.css(".product").each { |product| 
+                item_hash = {}
+
+                item_hash[:title] = product.css(".fda-title").text.strip
+                item_hash[:weight] = product.css(".size-description").text.strip
+
+                # item_link = product.css("div div div div div div a").attribute("href").value.strip
+                # item_site = Nokogiri::HTML(open("http://www.publix.com#{item_link}"))
+
+                # item_hash[:desc] = item_site.css("#content_0_OverviewRepeater_OverviewText_0 p").text.strip
+
+                items << item_hash
+            }
+
+            return items
+
+        else
+            return nil
+        end
     end
 
     def start_load_timer(start)
