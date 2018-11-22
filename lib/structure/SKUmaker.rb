@@ -13,7 +13,18 @@ class SKU
     end
 
     def generate_uniq_number
+        begin
+           amount = @@last_item.sku.scan(/[^0A-Za-z]/).join.to_i 
+        rescue => exception
+             amount = 0
+        end
+        amount += 1
+        amount  = amount.to_s.split("")
+        (8 - amount.length).times do
+            amount.unshift("0")
+        end
 
+        amount.join
     end
 
     def value
