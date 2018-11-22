@@ -56,4 +56,14 @@ class Database_Controller
             end
         end#first loop
     end
-end
+
+    def load_data_from_json
+
+    end
+
+    def save_data_to_json
+        
+    end
+
+
+end#endof class
