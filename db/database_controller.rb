@@ -28,7 +28,7 @@ class Database_Controller
                                 ite.weight = item[:weight]
                                 ite.sub_category = sub_cat
                                 ite.quantity = Random.new.rand(2000)
-                                ite.SKU = SKU.new(self)
+                                ite.sku = SKU.new(ite).value
 
                                 dept.save
                                 categ.save
@@ -45,8 +45,8 @@ class Database_Controller
                             ite.weight = item[:weight]
                             ite.category = categ
                             ite.quantity = Random.new.rand(2000)
-                            ite.sku = SKU.new(self).value
-
+                            ite.sku = SKU.new(ite).value
+                            
                             dept.save
                             categ.save
                             ite.save
@@ -62,7 +62,7 @@ class Database_Controller
     end
 
     def save_data_to_json
-        
+
     end
 
 
