@@ -58,12 +58,68 @@ class Database_Controller
     end
 
     def load_data_from_json
+        file = File.read("db/saves/save.json")
+        data_hash = JSON.parse(file)
 
+        data_hash
     end
 
     def save_data_to_json
+        hash = generate_hash_from_object_data
+
+        File.write("db/saves/save.json",hash.to_json)
+
 
     end
 
+    def generate_hash_from_object_data
+        hash_holder = {}
+        hash_holder["department"] = []
+        Department.all.each do |department|
+            hash = {}
+            hash["name"] = department.name
+            hash["categories"] = []
+            department.categories.each do |category|
+                categ_hash = {}
+                categ_hash["name"] = category.name
+                if category.sub_categories == nil
+                    #has items not sub_categ
+                    categ_hash["sub_categories"] = nil
+                    categ_hash["items"] = []
+                    category.items.each do |item|
+                        generate_hash_for_item(item, categ_hash) 
+                    end
+                else
+                    categ_hash["items"] = nil
+                    categ_hash["sub_categories"] = []
+                    category.sub_categories.each do |sub_category|
+                        sub_cat = {}
+                        sub_cat["name"] = sub_category.name
+                        sub_cat["items"] = []
+                        sub_category.items.each do |item|
+                            generate_hash_for_item(item, sub_cat)
+                        end
+                        categ_hash["sub_categories"] << sub_cat
+                    end
+                end
+                hash["categories"] << categ_hash
+            end
+            hash_holder["department"] << hash
+        end
+        hash_holder
+    end
+
+    def generate_hash_for_item(item, parent)
+        item_hash = {}
+
+        item_hash["name"] = item.name
+        item_hash["brand_name"] = item.brand_name
+        item_hash["desc"] = item.desc
+        item_hash["weight"] = item.weight
+        item_hash["quantity"] = item.quantity
+        item_hash["sku"] = item.sku
+        item_hash["item_received"] = item.last_received
+        parent["items"] << item_hash
+    end
 
 end#endof class
