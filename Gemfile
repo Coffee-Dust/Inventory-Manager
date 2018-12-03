@@ -12,6 +12,8 @@ gem "require_all"
 
 gem "nokogiri"
 
+gem "json"
+
 group :dev do
   gem "pry"
   gem "rspec", "~> 3.6"
