@@ -19,7 +19,7 @@ class Scraper
 
         #Sends that data to create_data_entry_for(department) for each department pod.
         department_links.each.with_index do |department, i|
-            if i > 4
+            if i > 7
                 @database << {"department#{i}" => create_data_entry_for(department)}
             end
         end

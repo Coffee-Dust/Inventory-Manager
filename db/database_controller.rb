@@ -22,23 +22,26 @@ class Database_Controller
                             sub_cat.name = sub_category[:name]
                             sub_cat.category = categ
 
-                            sub_category[:items].each do |item|
-                                ite = Item.new
-                                ite.name = item[:name]
-                                ite.weight = item[:weight]
-                                ite.sub_category = sub_cat
-                                ite.quantity = Random.new.rand(2000)
-                                ite.sku = SKU.new(ite).value
+                            begin
+                                sub_category[:items].each do |item|
+                                    ite = Item.new
+                                    ite.name = item[:title]
+                                    ite.weight = item[:weight]
+                                    ite.sub_category = sub_cat
+                                    ite.quantity = Random.new.rand(2000)
+                                    ite.sku = SKU.new(ite).value
 
-                                dept.save
-                                categ.save
-                                sub_cat.save
-                                ite.save
+                                    ite.save
 
+                                end
+                            rescue
+                                puts "Found a sub-sub category, we don't need this!"
                             end
+
+                            sub_cat.save
                         end
                     else
-                        #make the code for getting items here...
+                        #make the code fer getting items here...
                         category[:items].each do |item|
                             ite = Item.new
                             ite.name = item[:title]
@@ -47,12 +50,12 @@ class Database_Controller
                             ite.quantity = Random.new.rand(2000)
                             ite.sku = SKU.new(ite).value
                             
-                            dept.save
-                            categ.save
                             ite.save
                         end
                     end
+                    categ.save
                 end
+                dept.save
             end
         end#first loop
     end
@@ -61,7 +64,51 @@ class Database_Controller
         file = File.read("db/saves/save.json")
         data_hash = JSON.parse(file)
 
-        data_hash
+        data_hash["department"].each do |department|
+            dept = Department.new
+            dept.name = department["name"]
+
+            department["categories"].each do |category|
+                categ = Category.new
+                categ.name = category["name"]
+                categ.department = dept
+
+                if category["items"] == nil
+
+                    category["sub_categories"].each do |sub_category|
+                        sub_cat = Sub_Category.new
+                        sub_cat.name = sub_category["name"]
+                        sub_cat.category = categ
+
+                        sub_category["items"].each do |item|
+                            ite = Item.new
+                            ite.name = item["title"]
+                            item.keys.each do |key|
+                                ite.send("#{key}=", item[key])
+                            end
+
+                            ite.save
+
+                        end
+                        sub_cat.save
+                    end
+                else
+                    #make the code fer getting items here...
+                    category["items"].each do |item|
+                        ite = Item.new
+                        ite.name = item["title"]
+                        item.keys.each do |key|
+                            ite.send("#{key}=", item[key])
+                        end
+
+                        ite.save
+                    end
+                end
+                categ.save
+            end
+            dept.save
+        end
+        
     end
 
     def save_data_to_json
@@ -86,8 +133,13 @@ class Database_Controller
                     #has items not sub_categ
                     categ_hash["sub_categories"] = nil
                     categ_hash["items"] = []
-                    category.items.each do |item|
-                        generate_hash_for_item(item, categ_hash) 
+
+                    begin
+                       category.items.each do |item|
+                           generate_hash_for_item(item, categ_hash) 
+                       end 
+                    rescue => exception
+                        puts "There was an error, bypassing."
                     end
                 else
                     categ_hash["items"] = nil
@@ -118,7 +170,7 @@ class Database_Controller
         item_hash["weight"] = item.weight
         item_hash["quantity"] = item.quantity
         item_hash["sku"] = item.sku
-        item_hash["item_received"] = item.last_received
+        item_hash["last_received"] = item.last_received
         parent["items"] << item_hash
     end
 
