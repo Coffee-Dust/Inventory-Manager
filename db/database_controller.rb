@@ -3,6 +3,27 @@ class Database_Controller
         
     end
 
+    def clear_all_loaded_data
+        puts "Are you sure you want to delete the local data? You will not be able to recover or save the data afterwards. y/n"
+        input = gets.strip
+        if input == "y" || input == "yes"
+            Item.all.clear
+            Sub_Category.all.clear
+            Category.all.clear
+            Department.all.clear
+            puts "Deleted."
+        end
+    end
+
+    def delete_json_data
+        puts "Are you sure you want to delete the ENTIRE database save? y/n"
+        input = gets.strip
+        if input == "y" || input == "yes"
+            File.truncate("db/saves/save.json", 0)
+            puts "Save file deleted!"
+        end
+    end
+
     def create_data_from_scraper_hash(hash)
         hash.each do |departments|
 
@@ -82,7 +103,8 @@ class Database_Controller
 
                         sub_category["items"].each do |item|
                             ite = Item.new
-                            ite.name = item["title"]
+                            ite.name = item["name"]
+                            ite.sub_category = sub_cat
                             item.keys.each do |key|
                                 ite.send("#{key}=", item[key])
                             end
@@ -96,7 +118,8 @@ class Database_Controller
                     #make the code fer getting items here...
                     category["items"].each do |item|
                         ite = Item.new
-                        ite.name = item["title"]
+                        ite.name = item["name"]
+                        ite.category = categ
                         item.keys.each do |key|
                             ite.send("#{key}=", item[key])
                         end
@@ -139,7 +162,8 @@ class Database_Controller
                            generate_hash_for_item(item, categ_hash) 
                        end 
                     rescue => exception
-                        puts "There was an error, bypassing."
+                        puts exception
+                        puts "There was an error un-parsing in #{department.name} #{category.name}, bypassing."
                     end
                 else
                     categ_hash["items"] = nil
