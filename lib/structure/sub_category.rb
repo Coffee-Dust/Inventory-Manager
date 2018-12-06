@@ -10,19 +10,6 @@ class Sub_Category
         @items  = []
     end
 
-    # def self.create_from_hash(hash)
-    #     self.new.tap do |instance|
-    #         hash.each do |key, value|
-    #             begin
-    #                instance.send("#{key}=", value) 
-    #             rescue
-    #                 puts "Could not find method#{key}= for #{self}"
-    #             end
-    #         end
-    #         instance.save
-    #     end
-    # end
-
     def category=(cat)
         @category = cat
         cat.add_sub_categories(self)
