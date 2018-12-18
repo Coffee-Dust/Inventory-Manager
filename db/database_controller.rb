@@ -1,7 +1,21 @@
 class Database_Controller
-    def initialize
-        
+    def initialize(base)
+        self.load_data_from_json
+        if Item.all.length > 20
+            puts "Successfully loaded database from save."
+        else
+            puts "Database not found."
+        end
+        base.send("at_exit") do
+            puts "Saving all data to save."
+            self.save_data_to_json
+            puts "Saved data and exiting. Goodbye \\o/"
+        end
+
+
     end
+
+    
 
     def clear_all_loaded_data
         puts "Are you sure you want to delete the local data? You will not be able to recover or save the data afterwards. y/n"
@@ -136,6 +150,8 @@ class Database_Controller
 
     def save_data_to_json
         hash = generate_hash_from_object_data
+        
+        File.truncate("db/saves/save.json", 0)
 
         File.write("db/saves/save.json",hash.to_json)
 
