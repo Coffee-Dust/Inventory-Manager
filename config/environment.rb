@@ -25,8 +25,5 @@ puts '
 '
 
 #Chose which environment you want to load.
-include ENVIRONMENTS::DEV
+ENVIRONMENTS.select_environment(self)
 
-if ENV["APP_ENV"] == "DEV"
-  start_dev_CLI
-end

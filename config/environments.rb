@@ -1,4 +1,52 @@
-module ENVIRONMENTS
+class ENVIRONMENTS
+  @@all = ["DEFAULT", "DEVELOPMENT", "SIMULATION"]
+
+  def self.select_environment(base)
+
+    puts "Please select the environment you wish to load into. \nNOTE: If you want to run the program normally, please select: DEFAULT\n"
+
+    @@all.each.with_index do |name, i|
+      puts "#{i + 1}. #{name}"
+    end
+    puts "Please enter the number of the selection you want."
+    input = gets.strip
+    case input
+      when "1"
+        ENV["APP_ENV"] = "DEFAULT"
+      when "2"
+        ENV["APP_ENV"] = "DEV"
+      when "3"
+        ENV["APP_ENV"] = "SIMULATION"
+    end
+    self.load_environment(base)
+  end
+
+  def self.load_environment(base)
+  case ENV["APP_ENV"]
+    when "DEV"
+      base.send("include", ENVIRONMENTS::DEV)
+      start_dev_CLI
+    when "DEFAULT"
+      base.send("include", ENVIRONMENTS::DEFAULT)
+      # self.save_selection
+    when "SIMULATION"
+      base.send("include", ENVIRONMENTS::SIMULATION)
+    end
+  end
+
+    # def self.save_selection
+    #   puts "Would you like to save this environment selection and load into it automatically? y/n \nNOTE: You can change which environment you want with command \"change environment\" when on DEFAULT\n"
+    #   if input = gets.strip == "y"
+    #     hash = {environment: ENV["APP_ENV"]}
+
+    #     File.truncate("db/saves/settings.json", 0)
+
+    #     File.write("db/saves/settings.json",hash.to_json)
+    #   else
+    #     puts "Ok I won't save."
+    #   end
+    # end
+
   module DEV
 
     def start_dev_CLI
@@ -127,5 +175,8 @@ module ENVIRONMENTS
 
   end#endof default
 
+  module SIMULATION
+
+  end
 
 end#endof module
