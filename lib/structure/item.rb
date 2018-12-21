@@ -4,7 +4,7 @@ class Item
     include Storable::Instance
     extend Findable
 
-    attr_accessor :name, :brand_name, :desc, :weight, :quantity, :sku, :last_received
+    attr_accessor :name, :brand_name, :desc, :weight, :quantity, :sku, :last_ordered, :last_received
     attr_reader :sub_category
 
     def initialize

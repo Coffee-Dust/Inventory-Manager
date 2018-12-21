@@ -218,6 +218,7 @@ class Database_Controller
         item_hash["weight"] = item.weight
         item_hash["quantity"] = item.quantity
         item_hash["sku"] = item.sku
+        item_hash["last_ordered"] = item.last_ordered
         item_hash["last_received"] = item.last_received
         parent["items"] << item_hash
     end
