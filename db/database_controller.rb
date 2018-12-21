@@ -1,15 +1,23 @@
 class Database_Controller
     def initialize(base)
-        self.load_data_from_json
-        if Item.all.length > 20
-            puts "Successfully loaded database from save."
+
+        if File.zero?("db/saves/save.json")
+            puts "Save file is empty. Please add inventory by using the \'add to database\' command."
         else
-            puts "Database not found."
+            self.load_data_from_json
+            puts "Successfully loaded database from save."
         end
+
         base.send("at_exit") do
-            puts "Saving all data to save."
-            self.save_data_to_json
-            puts "Saved data and exiting. Goodbye \\o/"
+            puts "Saving all data to database save file."
+            #BUGFIX: To prevent saving twice in the case of on-exit being called twice.
+            if Thread.current.thread_variable_get("JSON_SAVED_ON_EXIT") == nil
+                self.save_data_to_json
+                Thread.current.thread_variable_set("JSON_SAVED_ON_EXIT", true)
+                puts "Saved data and exiting. Goodbye \\o/"
+            else
+                puts "Data already saved, no need to save it twice."
+            end
         end
 
 
@@ -150,7 +158,7 @@ class Database_Controller
 
     def save_data_to_json
         hash = generate_hash_from_object_data
-        
+
         File.truncate("db/saves/save.json", 0)
 
         File.write("db/saves/save.json",hash.to_json)
@@ -178,8 +186,8 @@ class Database_Controller
                            generate_hash_for_item(item, categ_hash) 
                        end 
                     rescue => exception
-                        puts exception
-                        puts "There was an error un-parsing in #{department.name} #{category.name}, bypassing."
+                        # puts exception
+                        # puts "There was an error un-parsing in #{department.name} #{category.name}, bypassing."
                     end
                 else
                     categ_hash["items"] = nil
