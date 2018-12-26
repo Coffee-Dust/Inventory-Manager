@@ -2,28 +2,64 @@ class Interface_Controller
     include Interface_Controller::COMMANDS
     def initialize(manager)
         @manager = manager
+        @command_history = []
+        @available_commands = []
         #start command loop.
     end
 
-    def view_home
-        puts '
-██╗  ██╗ ██████╗ ███╗   ███╗███████╗
-██║  ██║██╔═══██╗████╗ ████║██╔════╝
-███████║██║   ██║██╔████╔██║█████╗  
-██╔══██║██║   ██║██║╚██╔╝██║██╔══╝  
-██║  ██║╚██████╔╝██║ ╚═╝ ██║███████╗
-╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝'
 
-        puts "To return to home at anytime, type \'home\'"
+    def start_program_loop
+        call_method_from_input("home")
 
-        low_items = @manager.get_lowest_quantity
-        
-        puts "\nLow Inventory: Order soon!"
+        while true do
+            get_available_commands
 
-        puts "#{low_items[0].department.name}: #{low_items[0].name}: #{color_quantity(low_items[0].quantity)} | #{low_items[1].department.name}: #{low_items[1].name}: #{color_quantity(low_items[1].quantity)}"
-        puts "\n#{low_items[2].department.name}: #{low_items[2].name}: #{color_quantity(low_items[2].quantity)} | #{low_items[3].department.name}: #{low_items[3].name}: #{color_quantity(low_items[3].quantity)}"
-        puts "\n#{low_items[4].department.name}: #{low_items[4].name}: #{color_quantity(low_items[4].quantity)} | #{low_items[5].department.name}: #{low_items[5].name}: #{color_quantity(low_items[5].quantity)}"
+            input = gets.strip
+
+            call_method_from_input(input)
+
+            break if input == "exit program"
+        end
     end
+
+    def get_available_commands
+        @available_commands = []
+
+        case @command_history.last
+            when "focus_department"
+                @available_commands = ["back, rename"]
+            else
+                @available_commands = ["view low inventory", "log order", "received order", "find items", "all departments", "add to database"]
+        end
+    end
+
+    def call_method_from_input(input)
+        begin
+            number = Integer(input)
+            sending = @available_commands[number - 1].split(" ").join("_")
+            self.send(sending)
+            @command_history << sending
+
+        rescue => exception
+
+            name = input.split(" ").join("_")
+            begin
+                self.send(name)
+                @command_history << sending
+            rescue => exception
+                 puts "Could not find command. Please use 'list' or make sure you spelled the command EXACTLY as is."
+            end
+        end
+    end
+
+    def back
+        #figure out when thinking better...
+        @command_history.each.with_index do |c,i|
+            
+            self.send(c) if i < @command_history.length - 1
+        end
+    end
+
 
     def color_quantity(number)
         if number > 130
@@ -40,6 +76,10 @@ class Interface_Controller
                     return number.to_s.colorize(:red)
             end
         end
+    end
+
+    def cut_off_after_comma(string)
+        return string.split(",")[0]
     end
 
     def pry
