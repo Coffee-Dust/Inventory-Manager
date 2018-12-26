@@ -8,7 +8,6 @@ module Storable
 
     module Class
         def self.extended(base)
-            puts "#{base} extended #{self}"
             base.class_variable_set("@@all", [])
         end
 
