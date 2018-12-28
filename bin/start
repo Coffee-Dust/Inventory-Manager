@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
 require_relative "../config/environment"
-binding.pry
+
+im = Inventory_Manager.new
+Interface_Controller.new(im).start_program_loop
+
 #TODO: InterfaceController.new.start
