@@ -4,13 +4,12 @@ class Interface_Controller
         @manager = manager
         @command_history = []
         @available_commands = []
-        #start command loop.
+        @keep_commands = false
     end
 
 
     def start_program_loop
         call_method_from_input("home")
-
         while true do
             get_available_commands
 
@@ -23,40 +22,43 @@ class Interface_Controller
     end
 
     def get_available_commands
-        @available_commands = []
+        if @keep_commands == false
+            @available_commands.clear
 
-        case @command_history.last
-            when "focus_department"
-                @available_commands = ["back, rename"]
-            else
-                @available_commands = ["view low inventory", "log order", "received order", "find items", "all departments", "add to database"]
+            case @command_history.last
+                when "focus_object"
+                    @available_commands = ["back, rename"]
+
+                else
+                    @available_commands = ["view low inventory", "log order", "received order", "find items", "view all departments", "add to database"]
+            end
         end
+        @keep_commands = false
     end
 
     def call_method_from_input(input)
         begin
             number = Integer(input)
             sending = @available_commands[number - 1].split(" ").join("_")
-            self.send(sending)
-            @command_history << sending
+            if sending.include? "("
+                
+                self.send(sending.scan(/^[a-z _]*/)[0], sending.scan(/\d[^ ()]*/)[0])
+                @command_history << {sending.scan(/^[a-z _]*/)[0]=>sending.scan(/\d[^ ()]*/)[0]}
+            else
+                self.send(sending)
+                @command_history << sending
+            end
 
         rescue => exception
 
             name = input.split(" ").join("_")
             begin
                 self.send(name)
-                @command_history << sending
+                @command_history << name if name != "list" && name != "back"
             rescue => exception
+                # binding.pry
                  puts "Could not find command. Please use 'list' or make sure you spelled the command EXACTLY as is."
             end
-        end
-    end
-
-    def back
-        #figure out when thinking better...
-        @command_history.each.with_index do |c,i|
-            
-            self.send(c) if i < @command_history.length - 1
         end
     end
 
@@ -80,6 +82,52 @@ class Interface_Controller
 
     def cut_off_after_comma(string)
         return string.split(",")[0]
+    end
+
+
+
+    def large_text(object)
+        case object
+        when "dept"
+            puts '
+██████╗ ███████╗██████╗  █████╗ ██████╗ ████████╗███╗   ███╗███████╗███╗   ██╗████████╗   
+██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝████╗ ████║██╔════╝████╗  ██║╚══██╔══╝██╗
+██║  ██║█████╗  ██████╔╝███████║██████╔╝   ██║   ██╔████╔██║█████╗  ██╔██╗ ██║   ██║   ╚═╝
+██║  ██║██╔══╝  ██╔═══╝ ██╔══██║██╔══██╗   ██║   ██║╚██╔╝██║██╔══╝  ██║╚██╗██║   ██║   ██╗
+██████╔╝███████╗██║     ██║  ██║██║  ██║   ██║   ██║ ╚═╝ ██║███████╗██║ ╚████║   ██║   ╚═╝
+╚═════╝ ╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝      '
+        when "categ"
+            puts '
+  █████╗ █████╗ ████████╗███████╗ ██████╗  ██████╗ ██████╗ ██╗   ██╗   
+██╔════╝██╔══██╗╚══██╔══╝██╔════╝██╔════╝ ██╔═══██╗██╔══██╗╚██╗ ██╔╝██╗
+██║     ███████║   ██║   █████╗  ██║  ███╗██║   ██║██████╔╝ ╚████╔╝ ╚═╝
+██║     ██╔══██║   ██║   ██╔══╝  ██║   ██║██║   ██║██╔══██╗  ╚██╔╝  ██╗
+╚██████╗██║  ██║   ██║   ███████╗╚██████╔╝╚██████╔╝██║  ██║   ██║   ╚═╝
+ ╚═════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝   ╚═╝      
+                                                                       
+            '
+        when "sub_categ"
+            puts '
+███████╗██╗   ██╗██████╗  ██████╗ █████╗ ████████╗███████╗ ██████╗  ██████╗ ██████╗ ██╗   ██╗   
+██╔════╝██║   ██║██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██╔════╝██╔════╝ ██╔═══██╗██╔══██╗╚██╗ ██╔╝██╗
+███████╗██║   ██║██████╔╝██║     ███████║   ██║   █████╗  ██║  ███╗██║   ██║██████╔╝ ╚████╔╝ ╚═╝
+╚════██║██║   ██║██╔══██╗██║     ██╔══██║   ██║   ██╔══╝  ██║   ██║██║   ██║██╔══██╗  ╚██╔╝  ██╗
+███████║╚██████╔╝██████╔╝╚██████╗██║  ██║   ██║   ███████╗╚██████╔╝╚██████╔╝██║  ██║   ██║   ╚═╝
+╚══════╝ ╚═════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝   ╚═╝      
+                                                                                                
+            '
+
+        when "item"
+            puts '
+██╗████████╗███████╗███╗   ███╗   
+██║╚══██╔══╝██╔════╝████╗ ████║██╗
+██║   ██║   █████╗  ██╔████╔██║╚═╝
+██║   ██║   ██╔══╝  ██║╚██╔╝██║██╗
+██║   ██║   ███████╗██║ ╚═╝ ██║╚═╝
+╚═╝   ╚═╝   ╚══════╝╚═╝     ╚═╝   
+                                  
+            '
+        end
     end
 
     def pry
