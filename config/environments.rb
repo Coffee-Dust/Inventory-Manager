@@ -84,6 +84,12 @@ class ENVIRONMENTS
       Quorra.say("Welcome back, now input a command fool")
     end
 
+    def start_program_cli
+      im = Inventory_Manager.new
+      ic = Interface_Controller.new(im)
+      ic.start_program_loop
+    end
+
     def reload!
       puts "
   ┬─┐┌─┐┬  ┌─┐┌─┐┌┬┐┬┌┐┌┌─┐   
