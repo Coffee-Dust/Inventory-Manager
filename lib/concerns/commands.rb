@@ -53,20 +53,62 @@ class Interface_Controller
             puts "Please enter number of selection."
             @available_commands.clear
             @manager.sort_by_name(Department.all).each do |dept| 
-                @available_commands << "focus object(#{dept.object_id})"
+                @available_commands << "focus department(#{dept.object_id})"
             end
             @keep_commands = true
         end
 
-        def focus_object(object_id)
+        def focus_department(object_id)
 
-            object = @manager.find_object(object_id) 
+            dept = @manager.find_object(object_id) 
             puts "\n"
             large_text("dept")
-            puts "\n#{object.name}"
+            puts "\nName: #{dept.name}"
+            puts "\n\n\nCategories: "
+            dept.categories.each do |cat|
+                puts "   #{cat.name}"
+            end
 
-            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "Available commands:"
+        end
 
+        def view_categories
+            dept = @manager.find_object(@command_history.last["focus_department"])
+            puts "\n"
+            @manager.sort_by_name(dept.categories).each.with_index {|d, i| puts "#{i+1}. #{d.name}"}
+            puts "Please enter number of selection."
+            @available_commands.clear
+            @manager.sort_by_name(dept.categories).each do |categ|
+                @available_commands << "focus category(#{categ.object_id})"
+            end
+            @keep_commands = true
+        end
+
+        def focus_category(object_id)
+            categ = @manager.find_object(object_id) 
+            puts "\n"
+            large_text("categ")
+            puts "\nName: #{categ.name}"
+            if categ.items == nil
+                #Has no items so its a sub_category
+                puts "\n\n\nSubCategories: "
+                categ.sub_categories.each do |subcat|
+                    puts "   #{subcat.name}"
+                end
+                @available_commands << "view_subcategories"
+            else
+
+                puts "\n\n\nItems: "
+                categ.items.each.with_index do |item, i|
+                    break if i >= 15
+                    puts "   #{item.name}"
+                end
+                @available_commands << "view_items"
+            end
+
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "Available commands:"
         end
 
         def rename
