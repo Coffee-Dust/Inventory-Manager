@@ -5,6 +5,10 @@ class Interface_Controller
         @command_history = []
         @available_commands = []
         @keep_commands = false
+        #This keeps track of the index of @command_history, 
+        #      since view methods relys on it for object lookup.
+        # makes the back method work for those methods.
+        @command_index = 0
     end
 
 
@@ -22,6 +26,7 @@ class Interface_Controller
     end
 
     def get_available_commands
+        @command_index = @command_history.length - 1
         if @keep_commands == false
             @available_commands.clear
 
@@ -41,10 +46,11 @@ class Interface_Controller
                     when "focus_category"
                         @available_commands = ["rename", "back", "delete"]
                         #This finds out whether the category has items or not and adds the right method to commands
-                        if cat = @manager.find_object(@command_history.last["focus_category"]).items == nil
+                        categ = @manager.find_object(@command_history.last["focus_category"])
+                        if categ.items == nil
                             @available_commands << "view subcategories"
 
-                        elsif cat.items != nil
+                        elsif categ.items != nil
                             @available_commands << "view items"
                         end
                     when "focus_subcategory"
@@ -64,6 +70,7 @@ class Interface_Controller
             sending = @available_commands[number - 1].split(" ").join("_")
             if sending.include? "("
                 #REGEX seperates the input method into sendable data.
+                puts "found an ("
                 self.send(sending.scan(/^[a-z _]*/)[0], sending.scan(/\d[^ ()]*/)[0])
                 @command_history << {sending.scan(/^[a-z _]*/)[0]=>sending.scan(/\d[^ ()]*/)[0]}
             else
@@ -78,8 +85,12 @@ class Interface_Controller
                 self.send(name)
                 @command_history << name if name != "list" && name != "back"
             rescue => exception
-                # binding.pry
-                 puts "Could not find command. Please use 'list' or make sure you spelled the command EXACTLY as is."
+                puts exception
+                binding.pry
+
+                @keep_commands = true if @command_history.last.include? "view"
+                # @keep_commands = true
+                puts "Could not find command. Please use 'list' or make sure you spelled the command EXACTLY as is. \nOr make sure you selected a number within the range of options."
             end
         end
     end
