@@ -22,4 +22,12 @@ module Findable
         self.all.detect { |i| i.name == name }
     end
 
+    def find_by_SKU(sku)
+        self.all.detect {|i| i.sku == sku }
+    end
+
+    def find_by_weight(weight)
+        self.all.detect {|i| i.weight == weight}
+    end
+
 end#endof module
