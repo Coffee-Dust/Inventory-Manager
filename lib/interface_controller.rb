@@ -5,6 +5,10 @@ class Interface_Controller
         @command_history = []
         @available_commands = []
         @keep_commands = false
+        #USE: To force an input, put the input value you want as the key. 
+        #Then the number of gets loops you want to skip as the value.
+        # Recommended to use 1 as value.
+        @force_input = {"inputgoeshere"=>0}
         #This keeps track of the index of @command_history, 
         #      since view methods relys on it for object lookup.
         # makes the back method work for those methods.
@@ -17,7 +21,7 @@ class Interface_Controller
         while true do
             get_available_commands
 
-            input = gets.strip
+            input = gets.strip if @force_input.values[0] == 0
 
             call_method_from_input(input)
 
@@ -35,7 +39,7 @@ class Interface_Controller
                 @available_commands = ["back, rename"]
                 
             else
-                @available_commands = ["view low inventory", "log order", "received order", "find items", "view all departments", "add to database"]
+                @available_commands = ["view low inventory", "log order", "received shipment", "find items", "view all departments", "add to database"]
 
                 if @command_history.last.is_a? Hash
 
@@ -55,6 +59,8 @@ class Interface_Controller
                         end
                     when "focus_subcategory"
                         @available_commands = ["view items", "rename", "back", "delete"]
+                    when "focus_item"
+                        @available_commands = ["received shipment", "add to current order", "rename", "change location", "change info"]
                     else
                         @available_commands = ["back"]
                     end
@@ -65,19 +71,22 @@ class Interface_Controller
     end
 
     def call_method_from_input(input)
+        if @force_input.values[0] != 0
+            input = @force_input.keys[0]
+            @force_input[@force_input.keys[0]] -= 1
+        end
+
         begin
             number = Integer(input)
             sending = @available_commands[number - 1].split(" ").join("_")
             if sending.include? "("
                 #REGEX seperates the input method into sendable data.
-                puts "found an ("
                 self.send(sending.scan(/^[a-z _]*/)[0], sending.scan(/\d[^ ()]*/)[0])
                 @command_history << {sending.scan(/^[a-z _]*/)[0]=>sending.scan(/\d[^ ()]*/)[0]}
             else
                 self.send(sending)
                 @command_history << sending
             end
-
         rescue => exception
 
             name = input.split(" ").join("_")
@@ -115,6 +124,17 @@ class Interface_Controller
 
     def cut_off_after_comma(string)
         return string.split(",")[0]
+    end
+
+    def view_commands_one_line
+        commands = @available_commands.collect.with_index do |c,i|
+            if i == @available_commands.length - 1
+                "#{i + 1}. #{c}" 
+            else
+                "#{i + 1}. #{c}, "
+            end
+        end
+        puts commands.join()
     end
 
 
@@ -159,6 +179,17 @@ class Interface_Controller
 ██║   ██║   ███████╗██║ ╚═╝ ██║╚═╝
 ╚═╝   ╚═╝   ╚══════╝╚═╝     ╚═╝   
                                   
+            '
+
+        when "low_inv"
+            puts '
+██╗      ██████╗ ██╗    ██╗    ██╗███╗   ██╗██╗   ██╗███████╗███╗   ██╗████████╗ ██████╗ ██████╗ ██╗   ██╗
+██║     ██╔═══██╗██║    ██║    ██║████╗  ██║██║   ██║██╔════╝████╗  ██║╚══██╔══╝██╔═══██╗██╔══██╗╚██╗ ██╔╝
+██║     ██║   ██║██║ █╗ ██║    ██║██╔██╗ ██║██║   ██║█████╗  ██╔██╗ ██║   ██║   ██║   ██║██████╔╝ ╚████╔╝ 
+██║     ██║   ██║██║███╗██║    ██║██║╚██╗██║╚██╗ ██╔╝██╔══╝  ██║╚██╗██║   ██║   ██║   ██║██╔══██╗  ╚██╔╝  
+███████╗╚██████╔╝╚███╔███╔╝    ██║██║ ╚████║ ╚████╔╝ ███████╗██║ ╚████║   ██║   ╚██████╔╝██║  ██║   ██║   
+╚══════╝ ╚═════╝  ╚══╝╚══╝     ╚═╝╚═╝  ╚═══╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝   
+                                                                                                          
             '
         end
     end
