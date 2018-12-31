@@ -72,13 +72,13 @@ class Interface_Controller
             end
 
             puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-            puts "Available commands:"
+            puts "Available commands:\n1. View categories, 2. rename, 3. back, 4. delete"
         end
 
         def view_categories
             dept = @manager.find_object(@command_history[@command_index].values[0])
             puts "\n\n\n\n\n\n\n\n\n\n\n\n\nPlease Choose a Category:\n"
-            @manager.sort_by_name(dept.categories).each.with_index {|d, i| puts "#{i+1}. #{d.name}"}
+            @manager.sort_by_name(dept.categories).each.with_index {|c, i| puts "#{i+1}. #{c.name}"}
             puts "Please enter number of selection."
             @available_commands.clear
             @manager.sort_by_name(dept.categories).each do |categ|
@@ -94,10 +94,12 @@ class Interface_Controller
             puts "\nName: #{categ.name}"
             if categ.items == nil
                 #Has no items so its a sub_category
-                puts "\n\n\nSubCategories: "
+                puts "\n\n\nSub-Categories: "
                 categ.sub_categories.each do |subcat|
                     puts "   #{subcat.name}"
                 end
+                puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                puts "Available commands:\n1. rename, 2. back, 3. delete, 4. view subcategories"
             else
 
                 puts "\n\n\nItems: "
@@ -105,16 +107,16 @@ class Interface_Controller
                     break if i >= 15
                     puts "   #{item.name}"
                 end
+                puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                puts "Available commands:\n1. rename, 2. back, 3. delete, 4. view items"
             end
 
-            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-            puts "Available commands:"
         end
 
         def view_subcategories
             categ = @manager.find_object(@command_history[@command_index]["focus_category"])
             puts "\n\n\n\n\n\n\n\n\n\n\n\n\nPlease Choose a Sub-Category:\n"
-            @manager.sort_by_name(categ.sub_categories).each.with_index {|d, i| puts "#{i+1}. #{d.name}"}
+            @manager.sort_by_name(categ.sub_categories).each.with_index {|s, i| puts "#{i+1}. #{s.name}"}
             puts "Please enter number of selection."
             @available_commands.clear
             @manager.sort_by_name(categ.sub_categories).each do |subcat|
@@ -135,13 +137,13 @@ class Interface_Controller
             end
 
             puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-            puts "Available commands:"
+            puts "Available commands:\n1. view items, 2. rename, 3. back, 4. delete"
         end
 
         def view_items
             parent = @manager.find_object(@command_history[@command_index].values[0])
             puts "\n\n\n\n\n\n\n\n\n\n\n\n\nPlease Choose an Item:\n"
-            @manager.sort_by_name(parent.items).each.with_index {|d, i| puts "#{i+1}. #{d.name}"}
+            @manager.sort_by_name(parent.items).each.with_index {|item, i| puts "#{i+1}. #{item.name}"}
             puts "Please enter number of selection."
             @available_commands.clear
             @manager.sort_by_name(parent.items).each do |item|
@@ -165,11 +167,63 @@ class Interface_Controller
             puts "\n\n  Department: #{item.department.name}\n  Category: #{item.category.name}\n"
 
             puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-            puts "Available commands:"
+            puts "Available commands:\n1. received shipment, 2. add to current order 3. rename, 4. change location, 5. change info"
+        end
+
+        def view_low_inventory
+            large_text("low_inv")
+        end
+
+        def find_items
+            find_options = ["SKU"]
+            puts "Would you like to find your item using: \n1. SKU, 2. Name, 3. Weight"
+            input = gets.strip
+            case input
+            when "1"
+                puts "Please input SKU exactly."
+                sku = gets.strip
+                item = Item.find_by_SKU(sku)
+
+                @available_commands = ["focus item(#{item.object_id})"]
+                @keep_commands = true
+                # puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                # puts "Please select: \n1. View item\n\nChoose selection by number."
+                @force_input = {"1"=> 1}
+
+            when "back"
+                @command_history.pop
+                self.back
+
+            when "home"
+                self.home
+
+            else
+                puts "Please input a correct selection."
+            end
+        end
+
+        def received_shipment
+
         end
 
         def rename
-            puts "Ill rename it when i get to it"
+            object = @manager.find_object(@command_history[@command_index].values[0])
+            puts "Enter new name:"
+            name = gets.strip
+            object.name = name
+            puts "Name changed to #{object.name}"
+
+        end
+
+        def change_location
+            object = @manager.find_object(@command_history[@command_index].values[0])
+            puts "ill change location when i change location, GOsh!"
+
+        end
+
+        def change_info
+            object = @manager.find_object(@command_history[@command_index].values[0])
+
         end
 
     end#endof module
