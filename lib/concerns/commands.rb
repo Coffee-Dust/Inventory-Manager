@@ -16,14 +16,48 @@ class Interface_Controller
             low_items = @manager.get_lowest_quantity
 
             puts "\n\n\n\nLow Inventory: Order soon!".colorize(:light_red)
+            begin
+                puts "#{low_items[0].department.name}: #{cut_off_after_comma(low_items[0].name)}: #{color_quantity(low_items[0].quantity)} | #{low_items[1].department.name}: #{cut_off_after_comma(low_items[1].name)}: #{color_quantity(low_items[1].quantity)} | #{low_items[2].department.name}: #{cut_off_after_comma(low_items[2].name)}: #{color_quantity(low_items[2].quantity)}"
+            rescue => exception
+                puts "                  |                        |                     "
+            end
+            begin
+                puts "#{low_items[3].department.name}: #{cut_off_after_comma(low_items[3].name)}: #{color_quantity(low_items[3].quantity)} | #{low_items[4].department.name}: #{cut_off_after_comma(low_items[4].name)}: #{color_quantity(low_items[4].quantity)} | #{low_items[5].department.name}: #{cut_off_after_comma(low_items[5].name)}: #{color_quantity(low_items[5].quantity)}"
+            rescue => exception
+                puts "                  |                        |                     "
+            end
+            begin
+                puts "#{low_items[6].department.name}: #{cut_off_after_comma(low_items[6].name)}: #{color_quantity(low_items[6].quantity)} | #{low_items[7].department.name}: #{cut_off_after_comma(low_items[7].name)}: #{color_quantity(low_items[7].quantity)} | #{low_items[8].department.name}: #{cut_off_after_comma(low_items[8].name)}: #{color_quantity(low_items[8].quantity)}"
+            rescue => exception
+                puts "                  |                        |                     "
+            end
 
-            puts "#{low_items[0].department.name}: #{cut_off_after_comma(low_items[0].name)}: #{color_quantity(low_items[0].quantity)} | #{low_items[1].department.name}: #{cut_off_after_comma(low_items[1].name)}: #{color_quantity(low_items[1].quantity)} | #{low_items[2].department.name}: #{cut_off_after_comma(low_items[2].name)}: #{color_quantity(low_items[2].quantity)}"
-            puts "#{low_items[3].department.name}: #{cut_off_after_comma(low_items[3].name)}: #{color_quantity(low_items[3].quantity)} | #{low_items[4].department.name}: #{cut_off_after_comma(low_items[4].name)}: #{color_quantity(low_items[4].quantity)} | #{low_items[5].department.name}: #{cut_off_after_comma(low_items[5].name)}: #{color_quantity(low_items[5].quantity)}"
-            puts "#{low_items[6].department.name}: #{cut_off_after_comma(low_items[6].name)}: #{color_quantity(low_items[6].quantity)} | #{low_items[7].department.name}: #{cut_off_after_comma(low_items[7].name)}: #{color_quantity(low_items[7].quantity)} | #{low_items[8].department.name}: #{cut_off_after_comma(low_items[8].name)}: #{color_quantity(low_items[8].quantity)}"
+            soon_items = @manager.get_soon_to_be_received
+
+            puts "\n\n\n\n\n\n\n\nItems soon to be received:".colorize(:green)
+            puts "Format; Department: Item: Date ordered"
+            puts ""
+
+            begin
+                print "#{soon_items[0].department.name}: #{cut_off_after_comma(soon_items[0].name)}: #{viewable_date(soon_items[0].last_ordered)} | "
+                print "#{soon_items[1].department.name}: #{cut_off_after_comma(soon_items[1].name)}: #{viewable_date(soon_items[1].last_ordered)} | "
+                print "#{soon_items[2].department.name}: #{cut_off_after_comma(soon_items[2].name)}: #{viewable_date(soon_items[2].last_ordered)}"
+            rescue => exception
+                puts "                  |                        |                     "
+            end
+
+            begin
+                print "#{soon_items[3].department.name}: #{cut_off_after_comma(soon_items[3].name)}: #{viewable_date(soon_items[3].last_ordered)} | "
+                print "#{soon_items[4].department.name}: #{cut_off_after_comma(soon_items[4].name)}: #{viewable_date(soon_items[4].last_ordered)} | "
+                print "#{soon_items[5].department.name}: #{cut_off_after_comma(soon_items[5].name)}: #{viewable_date(soon_items[5].last_ordered)}"
+            rescue => exception
+                # puts "                  |                        |                     "
+            end
             
-            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
             puts "Commands:"
-            puts "1. View low inventory, 2. Log order, 3. Received Order, 4. Find items, 5. View all departments, 6. Add to database"
+            puts "1. View low inventory, 2. View current order, 3. Received Order, 4. Find items, 5. View all departments, 6. Add to database"
             puts "or use 'list' to view all available commands."
         end
 
@@ -190,6 +224,23 @@ class Interface_Controller
                 # puts "Please select: \n1. View item\n\nChoose selection by number."
                 @force_input = {"1"=> 1}
 
+            when "2"
+                puts "Please input name exactly."
+                name = gets.strip
+                item = Item.find_by_name(name)
+
+                @available_commands = ["focus item(#{item.object_id})"]
+                @keep_commands = true
+                @force_input = {"1"=> 1}
+
+            when "3"
+                puts "Please input weight exactly(including any describing words)."
+                weight = gets.strip
+                item = Item.find_by_weight(weight)
+
+                @available_commands = ["focus item(#{item.object_id})"]
+                @keep_commands = true
+                @force_input = {"1"=> 1}
             when "back"
                 @command_history.pop
                 self.back
@@ -200,6 +251,10 @@ class Interface_Controller
             else
                 puts "Please input a correct selection."
             end
+        end
+
+        def view_current_order
+
         end
 
         def received_shipment
