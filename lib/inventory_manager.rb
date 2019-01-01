@@ -1,4 +1,5 @@
 class Inventory_Manager
+    attr_reader :current_order
 
     def initialize
         puts "Starting Inventory Manager..."
@@ -9,9 +10,11 @@ class Inventory_Manager
     #I.D. items that are soon to be received(date farthest away thats has a received date that is before the order date)
 
     def place_current_order
-        current_order.each do |id, amount|
-            item = find_object(id)
-            order_item(item)
+        current_order.each do |hash|
+            hash.each do |id,amount|
+                item = find_object(id)
+                order_item(item)
+            end
         end
     end
 
@@ -46,7 +49,6 @@ class Inventory_Manager
     def received_item(item, quantity)
         item.last_received = Time.now
         item.quantity += quantity
-
     end
 
     def get_lowest_quantity
