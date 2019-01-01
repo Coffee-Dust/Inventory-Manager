@@ -64,6 +64,7 @@ class Interface_Controller
         def back
             @command_history.pop
             @command_history.each.with_index do |c,i|
+                puts "\n\n\n\n\n\n\n\n\n"
                 @command_index = i - 1
                 if c.is_a? Hash
                     c.each do |key, value|
@@ -220,8 +221,7 @@ class Interface_Controller
 
                 @available_commands = ["focus item(#{item.object_id})"]
                 @keep_commands = true
-                # puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-                # puts "Please select: \n1. View item\n\nChoose selection by number."
+
                 @force_input = {"1"=> 1}
 
             when "2"
@@ -254,10 +254,61 @@ class Interface_Controller
         end
 
         def view_current_order
+            large_text("current_order")
+            puts "NOTE: This does not order the item from the manufacturer. It is just for record keeping."
+            puts "\n\n"
+            @manager.current_order.each do |hash|
+                hash.each do |id, quantity|
+                    item = @manager.find_object(id)
+                    puts "#{item.department.name}: #{item.name}\n      order amount: #{quantity}"
+                end
+            end
 
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "Available commands:\n1. placed order, 2. delete order"
+        end
+
+        def placed_order
+            puts "Logging the items you've ordered..."
+            @manager.place_current_order
         end
 
         def received_shipment
+            large_text("received_shipment")
+            puts "NOTE: You will enter the item by SKU and then the quantity. When you are finished, type 'done'"
+
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+
+            while true do
+                puts "Enter the SKU and then the quantity in this format: SKU:QUANTITY"
+                input = gets.strip
+                break if input == "done"
+
+                begin
+                    split = input.split(":")
+                    @manager.received_item(Item.find_by_SKU(split[0]), Integer(split[1]))
+                rescue => exception
+                    binding.pry
+                    puts "Error: Remember no spaces, input exactly as SKU:QUANTITY"
+                end
+            end
+        end
+
+        def add_to_current_order
+            item = @manager.find_object(@command_history[@command_index].values[0])
+            puts "Please type in the amount you want to order: "
+            begin
+                input = Integer(gets.strip)
+            rescue => exception
+                puts "I'm sorry you did not enter a number."
+                self.back
+            end
+
+            puts "\nOrdering #{input} units of #{item.name}"
+
+            @manager.add_to_current_order(item, input)
+
+            @force_input = {"view current order"=>1}
 
         end
 
