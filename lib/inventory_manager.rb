@@ -25,14 +25,14 @@ class Inventory_Manager
             end
         end
 
-        ordered.collect do |item|
+        rtn = ordered.collect do |item|
             if item.last_received == nil
                 item                                               #number in days
             elsif (Time.now.to_date - item.last_received.to_date).to_i > 49
                 item
             end
         end
-
+        rtn.reject {|i| i == nil}
     end
 
     def add_to_current_order(item, quantity)
