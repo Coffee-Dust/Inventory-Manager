@@ -37,9 +37,11 @@ class Interface_Controller
             case @command_history.last
             when "focus_object"
                 @available_commands = ["back, rename"]
+            when "view_current_order"
+                @available_commands = ["placed order", "delete order"]
                 
             else
-                @available_commands = ["view low inventory", "log order", "received shipment", "find items", "view all departments", "add to database"]
+                @available_commands = ["view low inventory", "view current order", "received shipment", "find items", "view all departments", "add to database"]
 
                 if @command_history.last.is_a? Hash
 
@@ -75,6 +77,8 @@ class Interface_Controller
             input = @force_input.keys[0]
             @force_input[@force_input.keys[0]] -= 1
         end
+
+        @command_history.clear if input == "home"
 
         begin
             number = Integer(input)
@@ -120,6 +124,10 @@ class Interface_Controller
                 return number.to_s.colorize(:red)
             end
         end
+    end
+
+    def viewable_date(date)
+        return "#{date.month}-#{date.day}-#{date.year}"
     end
 
     def cut_off_after_comma(string)
@@ -190,6 +198,28 @@ class Interface_Controller
 ███████╗╚██████╔╝╚███╔███╔╝    ██║██║ ╚████║ ╚████╔╝ ███████╗██║ ╚████║   ██║   ╚██████╔╝██║  ██║   ██║   
 ╚══════╝ ╚═════╝  ╚══╝╚══╝     ╚═╝╚═╝  ╚═══╝  ╚═══╝  ╚══════╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝   
                                                                                                           
+            '
+
+        when "current_order"
+            puts '
+ ██████╗██╗   ██╗██████╗ ██████╗ ███████╗███╗   ██╗████████╗     ██████╗ ██████╗ ██████╗ ███████╗██████╗ 
+██╔════╝██║   ██║██╔══██╗██╔══██╗██╔════╝████╗  ██║╚══██╔══╝    ██╔═══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗
+██║     ██║   ██║██████╔╝██████╔╝█████╗  ██╔██╗ ██║   ██║       ██║   ██║██████╔╝██║  ██║█████╗  ██████╔╝
+██║     ██║   ██║██╔══██╗██╔══██╗██╔══╝  ██║╚██╗██║   ██║       ██║   ██║██╔══██╗██║  ██║██╔══╝  ██╔══██╗
+╚██████╗╚██████╔╝██║  ██║██║  ██║███████╗██║ ╚████║   ██║       ╚██████╔╝██║  ██║██████╔╝███████╗██║  ██║
+ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝        ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝
+                                                                                                         
+            '
+
+        when "received_shipment"
+            puts '
+███████╗██╗  ██╗██╗██████╗ ███╗   ███╗███████╗███╗   ██╗████████╗    ██████╗ ███████╗ ██████╗███████╗██╗██╗   ██╗███████╗██████╗ 
+██╔════╝██║  ██║██║██╔══██╗████╗ ████║██╔════╝████╗  ██║╚══██╔══╝    ██╔══██╗██╔════╝██╔════╝██╔════╝██║██║   ██║██╔════╝██╔══██╗
+███████╗███████║██║██████╔╝██╔████╔██║█████╗  ██╔██╗ ██║   ██║       ██████╔╝█████╗  ██║     █████╗  ██║██║   ██║█████╗  ██║  ██║
+╚════██║██╔══██║██║██╔═══╝ ██║╚██╔╝██║██╔══╝  ██║╚██╗██║   ██║       ██╔══██╗██╔══╝  ██║     ██╔══╝  ██║╚██╗ ██╔╝██╔══╝  ██║  ██║
+███████║██║  ██║██║██║     ██║ ╚═╝ ██║███████╗██║ ╚████║   ██║       ██║  ██║███████╗╚██████╗███████╗██║ ╚████╔╝ ███████╗██████╔╝
+╚══════╝╚═╝  ╚═╝╚═╝╚═╝     ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝       ╚═╝  ╚═╝╚══════╝ ╚═════╝╚══════╝╚═╝  ╚═══╝  ╚══════╝╚═════╝ 
+                                                                                                                                 
             '
         end
     end
