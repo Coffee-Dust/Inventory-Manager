@@ -292,7 +292,7 @@ class Interface_Controller
             puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 
             while true do
-                puts "Enter the SKU and then the quantity in this format: SKU:QUANTITY"
+                puts "Enter the SKU and then the quantity in this format: SKU:QUANTITY\nType done when finished."
                 input = gets.strip
                 break if input == "done"
 
@@ -382,14 +382,17 @@ class Interface_Controller
                 input = gets.strip
                 case input
                 when "1"
+                    puts "Please enter new SKU."
                     input = gets.strip
                     item.sku = input
                     puts "Changed SKU to: #{input}"
                 when "2"
+                    puts "Please enter new quantity."
                     input = gets.strip
                     item.quantity = Integer(input)
                     puts "Changed quantity to: #{input}"
                 when "3"
+                    puts "Please enter new weight."
                     input = gets.strip
                     item.weight = input
                     puts "Changed weight to: #{input}"
@@ -405,6 +408,8 @@ class Interface_Controller
                     dates = input.split("-")
                     item.last_received = Time.new(dates[0].to_i, dates[1].to_i, dates[2].to_i)
                     puts "Changed last received date to: #{item.last_received}"
+                else
+                    puts "Please input the number of selection. To quit, type 'done'"
                 end
                 break if input == "done"
             end
