@@ -279,7 +279,7 @@ class Interface_Controller
                 puts "Please enter quantity:"
                 quantity = gets.strip
                 @manager.received_item(item, Integer(quantity))
-                self.back
+                puts "Quantity is now: item.quantity. Please use home or back."
             rescue => exception
                 puts "Sorry, please enter a number only."
             end
@@ -334,6 +334,7 @@ class Interface_Controller
         end
 
         def change_location
+            #TODO: refactor this, make it fancier and where you dont have to start over
             item = @manager.find_object(@command_history[@command_index].values[0])
             puts "Please input the name of the department EXACTLY."
             input = gets.strip
@@ -375,7 +376,40 @@ class Interface_Controller
 
         def change_info
             item = @manager.find_object(@command_history[@command_index].values[0])
-            
+            puts "Here you can change items information. Please select info you want to change. \nWhen done, type 'done'"
+            while true do
+                puts "1. Change SKU, 2. Change Quantity, 3. Change Weight, 4. Change last ordered date, 5. Change last received date."
+                input = gets.strip
+                case input
+                when "1"
+                    input = gets.strip
+                    item.sku = input
+                    puts "Changed SKU to: #{input}"
+                when "2"
+                    input = gets.strip
+                    item.quantity = Integer(input)
+                    puts "Changed quantity to: #{input}"
+                when "3"
+                    input = gets.strip
+                    item.weight = input
+                    puts "Changed weight to: #{input}"
+                when "4"
+                    puts "Please input time as: year-month-day in numbers with dashes(no spaces)"
+                    input = gets.strip
+                    dates = input.split("-")
+                    item.last_ordered = Time.new(dates[0].to_i, dates[1].to_i, dates[2].to_i)
+                    puts "Changed last ordered date to: #{item.last_ordered}"
+                when "5"
+                    puts "Please input time as: year-month-day in numbers with dashes(no spaces)"
+                    input = gets.strip
+                    dates = input.split("-")
+                    item.last_received = Time.new(dates[0].to_i, dates[1].to_i, dates[2].to_i)
+                    puts "Changed last received date to: #{item.last_received}"
+                end
+                break if input == "done"
+            end
+
+
         end
 
     end#endof module
