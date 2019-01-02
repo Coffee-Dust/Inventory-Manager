@@ -202,7 +202,7 @@ class Interface_Controller
             puts "\n\n  Department: #{item.department.name}\n  Category: #{item.category.name}\n"
 
             puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-            puts "Available commands:\n1. received shipment, 2. add to current order 3. rename, 4. change location, 5. change info"
+            puts "Available commands:\n1. received this item, 2. add to current order 3. rename, 4. change location, 5. change info"
         end
 
         def view_low_inventory
@@ -273,6 +273,18 @@ class Interface_Controller
             @manager.place_current_order
         end
 
+        def received_this_item
+            begin
+                item = @manager.find_object(@command_history[@command_index].values[0])
+                puts "Please enter quantity:"
+                quantity = gets.strip
+                @manager.received_item(item, Integer(quantity))
+                self.back
+            rescue => exception
+                puts "Sorry, please enter a number only."
+            end
+        end
+
         def received_shipment
             large_text("received_shipment")
             puts "NOTE: You will enter the item by SKU and then the quantity. When you are finished, type 'done'"
@@ -322,14 +334,48 @@ class Interface_Controller
         end
 
         def change_location
-            object = @manager.find_object(@command_history[@command_index].values[0])
-            puts "ill change location when i change location, GOsh!"
+            item = @manager.find_object(@command_history[@command_index].values[0])
+            puts "Please input the name of the department EXACTLY."
+            input = gets.strip
+
+            dept = Department.find_by_name(input)
+            if dept == nil
+                puts "Could not find that department, please check spelling. Please start over."
+            end
+
+            puts "Please input the name of the category in that department EXACTLY."
+            input = gets.strip
+
+            categ = dept.find_category(Category.find_by_name(input))
+
+            if categ == nil
+                puts "Could not find that category in that department, please make sure its spelled correctly and is part of that department. Please start over."
+            end
+
+            if categ.sub_categories != nil
+                puts "Please input the name of the sub-category in that category."
+                input = gets.strip
+
+                sub_categ = Sub_Category.find_by_name(input)
+                puts "Could not find that sub_category. Please start over."
+                if sub_categ.category == categ
+                    item.sub_category = sub_categ
+                    item.category = categ
+                end
+            else
+                begin
+                    item.category = categ
+                    puts "Changed location to: #{dept.name}: #{categ.name}. \nPlease use home to return to the home page."
+                rescue => exception
+                    binding.pry
+                end
+            end
 
         end
 
         def change_info
-            object = @manager.find_object(@command_history[@command_index].values[0])
-
+            item = @manager.find_object(@command_history[@command_index].values[0])
+            
         end
 
     end#endof module
