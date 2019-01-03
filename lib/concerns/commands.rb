@@ -206,7 +206,21 @@ class Interface_Controller
         end
 
         def view_low_inventory
+            puts "\n\n\n\n\n\n\n\n\n"
             large_text("low_inv")
+            @available_commands.clear
+            puts "Type the number of the selection you want to view. Then when viewing it, add to current order."
+            low_inv = @manager.get_lowest_quantity
+
+            puts "Lowest Inventory: Order now!".colorize(:light_red)
+            low_inv.each.with_index do |item,i|
+                break if i >= 20
+                puts "#{i + 1}. #{item.name}: #{color_quantity(item.quantity)}"
+                @available_commands << "focus item(#{item.object_id})"
+            end
+            @keep_commands = true
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "Available commands:\nType selection of item you want to view and order."
         end
 
         def find_items
@@ -279,7 +293,7 @@ class Interface_Controller
                 puts "Please enter quantity:"
                 quantity = gets.strip
                 @manager.received_item(item, Integer(quantity))
-                puts "Quantity is now: item.quantity. Please use home or back."
+                puts "Quantity is now: #{item.quantity}. Please use home."
             rescue => exception
                 puts "Sorry, please enter a number only."
             end
