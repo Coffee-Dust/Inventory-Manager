@@ -334,44 +334,52 @@ class Interface_Controller
         end
 
         def change_location
-            #TODO: refactor this, make it fancier and where you dont have to start over
             item = @manager.find_object(@command_history[@command_index].values[0])
-            puts "Please input the name of the department EXACTLY."
-            input = gets.strip
+            dept, categ, sub_categ = nil, nil, nil
 
-            dept = Department.find_by_name(input)
-            if dept == nil
-                puts "Could not find that department, please check spelling. Please start over."
+            while dept == nil do
+                puts "Please input the name of the department EXACTLY."
+                input = gets.strip
+                dept = Department.find_by_name(input)
+                if dept == nil
+                    puts "Could not find that department, please check spelling."
+                else
+                    break
+                end
             end
 
-            puts "Please input the name of the category in that department EXACTLY."
-            input = gets.strip
-
-            categ = dept.find_category(Category.find_by_name(input))
-
-            if categ == nil
-                puts "Could not find that category in that department, please make sure its spelled correctly and is part of that department. Please start over."
+            while categ == nil do
+                puts "Please input the name of the category in that department EXACTLY."
+                input = gets.strip
+                categ = dept.find_category(Category.find_by_name(input))
+                if categ == nil
+                    puts "Could not find that category in that department, please make sure its spelled correctly and is part of that department."
+                else
+                    break
+                end
             end
 
             if categ.sub_categories != nil
-                puts "Please input the name of the sub-category in that category."
-                input = gets.strip
+                while sub_categ == nil do
+                    puts "Please input the name of the sub-category in that category."
+                    input = gets.strip
 
-                sub_categ = Sub_Category.find_by_name(input)
-                puts "Could not find that sub_category. Please start over."
-                if sub_categ.category == categ
-                    item.sub_category = sub_categ
-                    item.category = categ
+                    sub_categ = Sub_Category.find_by_name(input)
+                    if sub_categ.category == categ
+                        item.sub_category = sub_categ
+                        item.category = categ
+                        puts "Changed location to: #{dept.name}: #{categ.name}: #{sub_categ.name}. \nPlease use home to return to the home page."
+                        break
+                    else #when the subcategory does not belong to the category
+                        sub_categ = nil
+                        puts "Could not find that sub-category. Make sure its a sub-category of the category you already chose."
+                    end
                 end
-            else
-                begin
-                    item.category = categ
-                    puts "Changed location to: #{dept.name}: #{categ.name}. \nPlease use home to return to the home page."
-                rescue => exception
-                    binding.pry
-                end
+
+            else #when there is no sub_category:
+                item.category = categ
+                puts "Changed location to: #{dept.name}: #{categ.name}. \nPlease use home to return to the home page."
             end
-
         end
 
         def change_info
