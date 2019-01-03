@@ -63,17 +63,29 @@ class Interface_Controller
 
         def back
             @command_history.pop
-            @command_history.each.with_index do |c,i|
-                puts "\n\n\n\n\n\n\n\n\n"
-                @command_index = i - 1
-                if c.is_a? Hash
-                    c.each do |key, value|
-                        self.send(key, value)
-                    end
-                else
-                    self.send(c)
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            c = @command_history.last
+            @command_index -= 2
+            if c.is_a? Hash
+                c.each do |key, value|
+                    self.send(key, value)
                 end
+            else
+                self.send(c)
             end
+            #REMOVED: Back used to call all the methods in the history, 
+            # this proved to be too unstable and was removed.
+            # @command_history.each.with_index do |c,i|
+            #     puts "\n\n\n\n\n\n\n\n\n"
+            #     @command_index = i - 1
+            #     if c.is_a? Hash
+            #         c.each do |key, value|
+            #             self.send(key, value)
+            #         end
+            #     else
+            #         self.send(c)
+            #     end
+            # end
         end
 
         def list
@@ -209,17 +221,18 @@ class Interface_Controller
             puts "\n\n\n\n\n\n\n\n\n"
             large_text("low_inv")
             @available_commands.clear
-            puts "Type the number of the selection you want to view. Then when viewing it, add to current order."
+            puts "Type the number of the selection you want to view. Then when viewing it, add to current order.\n"
             low_inv = @manager.get_lowest_quantity
 
             puts "Lowest Inventory: Order now!".colorize(:light_red)
+            puts "\n"
             low_inv.each.with_index do |item,i|
-                break if i >= 20
-                puts "#{i + 1}. #{item.name}: #{color_quantity(item.quantity)}"
+                break if i >= 25
+                puts "  #{i + 1}. #{item.name}: #{color_quantity(item.quantity)}"
                 @available_commands << "focus item(#{item.object_id})"
             end
             @keep_commands = true
-            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
             puts "Available commands:\nType selection of item you want to view and order."
         end
 
@@ -285,6 +298,7 @@ class Interface_Controller
         def placed_order
             puts "Logging the items you've ordered..."
             @manager.place_current_order
+            puts "Done, please return home."
         end
 
         def received_this_item
