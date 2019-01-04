@@ -67,51 +67,7 @@ class Inventory_Manager
             a.name <=> b.name
         end
     end
-
-    def delete_object_and_children(object)
-        case object
-        when Department
-            items_index = []
-            Item.all.each.with_index do |item,i|
-                items_index << i if item.department == object
-            end
-            items_index.each {|i| Item.all.delete_at(i)}
-
-            sub_categ_index = []
-            Sub_Category.all.each.with_index do |sub_categ,i|
-                sub_categ_index << i if sub_categ.category.department == object
-            end
-            sub_categ_index.each {|i| Sub_Category.all.delete_at(i)}
-
-            categ_index = []
-            Category.all.each.with_index do |categ,i|
-                categ_index << i if categ.department == object
-            end
-            categ_index.each {|i| Category.all.delete_at(i)}
-
-            Department.all.each.with_index do |dept,i|
-                if dept == object
-                    Department.all.delete_at(i)
-                end
-            end
-
-            items_index = []
-            Item.all.each.with_index do |item,i|
-                if item.department.name == "Dairy"
-                    Item.all[i] = nil
-                    Item.all.delete_at(i)
-                end
-            end
-
-        when Category
-
-        when Sub_Category
-
-        when Item
-
-        end
-    end
-
+    
     def delete_object(object)
         case object
         when Department
