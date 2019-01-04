@@ -10,6 +10,24 @@ class Inventory_Manager
         Item.all[23].last_received = Time.new(2018, 11, 28)
     end
 
+    def get_lowest_quantity
+        Item.all.sort do |a,b|
+            a.quantity <=> b.quantity
+        end
+    end
+
+    def find_object(object_id)
+        ObjectSpace._id2ref(Integer(object_id))
+    end
+
+    def sort_by_name(array)
+        array.sort do |a,b|
+            a.name <=> b.name
+        end
+    end
+
+    #--------Ordering methods------------
+
     def place_current_order
         current_order.each do |hash|
             hash.each do |id,amount|
@@ -51,23 +69,11 @@ class Inventory_Manager
         item.last_received = Time.now
         item.quantity += quantity
     end
-
-    def get_lowest_quantity
-        Item.all.sort do |a,b|
-            a.quantity <=> b.quantity
-        end
-    end
-
-    def find_object(object_id)
-        ObjectSpace._id2ref(Integer(object_id))
-    end
-
-    def sort_by_name(array)
-        array.sort do |a,b|
-            a.name <=> b.name
-        end
-    end
     
+    #--------Creating methods------------
+
+    #--------Deleting methods------------
+
     def delete_object(object)
         case object
         when Department
