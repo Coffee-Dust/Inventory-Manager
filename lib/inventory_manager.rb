@@ -5,9 +5,10 @@ class Inventory_Manager
         puts "Starting Inventory Manager..."
         @dbc = Database_Controller.new(self)
         @current_order = []
+        Item.all[123].last_ordered = Time.new(2018, 10, 28)
+        Item.all[23].last_ordered = Time.new(2018, 11, 8)
+        Item.all[23].last_received = Time.new(2018, 11, 28)
     end
-
-    #I.D. items that are soon to be received(date farthest away thats has a received date that is before the order date)
 
     def place_current_order
         current_order.each do |hash|
@@ -65,6 +66,222 @@ class Inventory_Manager
         array.sort do |a,b|
             a.name <=> b.name
         end
+    end
+
+    def delete_object_and_children(object)
+        case object
+        when Department
+            items_index = []
+            Item.all.each.with_index do |item,i|
+                items_index << i if item.department == object
+            end
+            items_index.each {|i| Item.all.delete_at(i)}
+
+            sub_categ_index = []
+            Sub_Category.all.each.with_index do |sub_categ,i|
+                sub_categ_index << i if sub_categ.category.department == object
+            end
+            sub_categ_index.each {|i| Sub_Category.all.delete_at(i)}
+
+            categ_index = []
+            Category.all.each.with_index do |categ,i|
+                categ_index << i if categ.department == object
+            end
+            categ_index.each {|i| Category.all.delete_at(i)}
+
+            Department.all.each.with_index do |dept,i|
+                if dept == object
+                    Department.all.delete_at(i)
+                end
+            end
+
+            items_index = []
+            Item.all.each.with_index do |item,i|
+                if item.department.name == "Dairy"
+                    Item.all[i] = nil
+                    Item.all.delete_at(i)
+                end
+            end
+
+        when Category
+
+        when Sub_Category
+
+        when Item
+
+        end
+    end
+
+    def delete_object(object)
+        case object
+        when Department
+            delete_items_from_parent(object)
+            delete_sub_categories_from_parent(object)
+            delete_categories_from_parent(object)
+            Department.all.each.with_index do |dept,i|
+                if dept == object
+                    Department.all.delete_at(i)
+                end
+            end
+        when Category
+            delete_items_from_parent(object)
+            delete_sub_categories_from_parent(object)
+            delete_categories_from_parent(object)
+
+        when Sub_Category
+            delete_items_from_parent(object)
+            delete_sub_categories_from_parent(object)
+        when Item
+            delete_items_from_parent(object)
+        end
+
+    end
+
+    def delete_items_from_parent(object)
+
+        case object
+        when Department
+            while Item.all.detect {|i| i.department == object} != nil
+                Item.all.each.with_index do |item,i|
+                    if item.department == object
+                        remove_object_ref(item)
+                        Item.all[i] = nil
+                        Item.all.delete_at(i)
+                    end
+                end
+            end
+
+        when Category
+            while Item.all.detect {|i| i.category == object} != nil
+                Item.all.each.with_index do |item,i|
+                    if item.category == object
+                        item.category.items
+                        remove_object_ref(item)
+                        Item.all[i] = nil
+                        Item.all.delete_at(i)
+                    end
+                end
+            end
+
+        when Sub_Category
+            while Item.all.detect {|i| i.sub_category == object} != nil
+                Item.all.each.with_index do |item,i|
+                    if item.department == object
+                        remove_object_ref(item)
+                        Item.all[i] = nil
+                        Item.all.delete_at(i)
+                    end
+                end
+            end
+
+        when Item
+            while Item.all.detect {|i| i == object} != nil
+                Item.all.each.with_index do |item,i|
+                    if item == object
+                        remove_object_ref(item)
+                        Item.all[i] = nil
+                        Item.all.delete_at(i)
+                    end
+                end
+            end
+        end
+    end#endof method
+
+    def delete_sub_categories_from_parent(object)
+        case object
+        when Sub_Category
+            while Sub_Category.all.detect {|i| i == object} != nil
+                Sub_Category.all.each.with_index do |sub_categ,i|
+                    if sub_categ == object
+                        remove_object_ref(sub_categ)
+                        Sub_Category.all[i] = nil
+                        Sub_Category.all.delete_at(i)
+                    end
+                end
+            end
+        when Category
+            while Sub_Category.all.detect {|i| i.category == object} != nil
+                Sub_Category.all.each.with_index do |sub_categ,i|
+                    if sub_categ.category == object
+                        remove_object_ref(sub_categ)
+                        Sub_Category.all[i] = nil
+                        Sub_Category.all.delete_at(i)
+                    end
+                end
+            end
+
+        when Department
+            while Sub_Category.all.detect {|i| i.category.department == object} != nil
+                Sub_Category.all.each.with_index do |sub_categ,i|
+                    if sub_categ.category.department == object
+                        remove_object_ref(sub_categ)
+                        Sub_Category.all[i] = nil
+                        Sub_Category.all.delete_at(i)
+                    end
+                end
+            end
+
+        end
+    end
+
+    def delete_categories_from_parent(object)
+        case object
+        when Category
+            while Category.all.detect {|i| i == object} != nil
+                Category.all.each.with_index do |categ,i|
+                    if categ == object
+                        remove_object_ref(categ)
+                        Category.all[i] = nil
+                        Category.all.delete_at(i)
+                    end
+                end
+            end
+        when Department
+            while Category.all.detect {|i| i.department == object} != nil
+                Category.all.each.with_index do |categ,i|
+                    if categ.department == object
+                        remove_object_ref(categ)
+                        Category.all[i] = nil
+                        Category.all.delete_at(i)
+                    end
+                end
+            end
+
+        end
+    end
+
+    def remove_object_ref(object)
+        #Won't fully delete if object has references to other instances.
+        case object
+        when Category
+            object.department.categories.each.with_index do |item, i|
+                if item == object
+                    object.department.categories.delete_at(i)
+                end
+            end
+        when Sub_Category
+            object.category.sub_categories.each.with_index do |sub_categ, i|
+                if sub_categ == object
+                    object.category.sub_categories.delete_at(i)
+                end
+            end
+            
+        when Item
+            if object.sub_category != nil
+                object.sub_category.items.each.with_index do |item, i|
+                    if item == object
+                        object.sub_category.items.delete_at(i)
+                    end
+                end
+            else
+                object.category.items.each.with_index do |item, i|
+                    if item == object
+                        object.category.items.delete_at(i)
+                    end
+                end
+            end
+        end
+
     end
 
     def pry
