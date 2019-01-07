@@ -139,23 +139,29 @@ class Interface_Controller
             puts "\n"
             large_text("categ")
             puts "\nName: #{categ.name}"
-            if categ.items == nil
-                #Has no items so its a sub_category
-                puts "\n\n\nSub-Categories: "
-                categ.sub_categories.each do |subcat|
-                    puts "   #{subcat.name}"
-                end
-                puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-                puts "Available commands:\n1. rename, 2. back, 3. delete, 4. view subcategories"
-            else
+            #This error catch is when the category has neither items nor sub_categs
+            begin
+                if categ.items == nil
+                    #Has no items so its a sub_category
+                    puts "\n\n\nSub-Categories: "
+                    categ.sub_categories.each do |subcat|
+                        puts "   #{subcat.name}"
+                    end
+                    puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                    puts "Available commands:\n1. rename, 2. back, 3. delete, 4. view subcategories"
+                else
 
-                puts "\n\n\nItems: "
-                categ.items.each.with_index do |item, i|
-                    break if i >= 15
-                    puts "   #{item.name}"
+                    puts "\n\n\nItems: "
+                    categ.items.each.with_index do |item, i|
+                        break if i >= 15
+                        puts "   #{item.name}"
+                    end
+                    puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                    puts "Available commands:\n1. rename, 2. back, 3. delete, 4. view items"
                 end
+            rescue => exception
                 puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-                puts "Available commands:\n1. rename, 2. back, 3. delete, 4. view items"
+                puts "Available commands:\n1. rename, 2. back, 3. delete"
             end
 
         end
@@ -214,7 +220,7 @@ class Interface_Controller
             puts "\n\n  Department: #{item.department.name}\n  Category: #{item.category.name}\n"
 
             puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-            puts "Available commands:\n1. received this item, 2. add to current order 3. rename, 4. change location, 5. change info"
+            puts "Available commands:\n1. received this item, 2. add to current order 3. rename, 4. change location, 5. change info, 6. delete"
         end
 
         def view_low_inventory
@@ -301,6 +307,12 @@ class Interface_Controller
             puts "Done, please return home."
         end
 
+        def delete_order
+            puts "Removing items from current order..."
+            @manager.current_order.clear
+            puts "Done, order cleared. Please return home."
+        end
+
         def received_this_item
             begin
                 item = @manager.find_object(@command_history[@command_index].values[0])
@@ -352,6 +364,155 @@ class Interface_Controller
 
         end
 
+        def add_to_database
+            puts "\n\n\n\n\n\n\n\n\n"
+            large_text("add_data")
+            puts "NOTE: You can add-on to existing Departments and Categories, or you can create new ones."
+
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            
+            puts "Type done when finished."
+            puts "Available commands:\n1. create new item, 2. create new sub-category 3. create new category, 4. create new department"
+            attributes = {}
+            dept, categ, sub_categ = nil, nil, nil
+
+            while true do
+                input = gets.strip
+                case input
+                when "1"
+                    item_method_names = {"name"=>"name", "brand name"=>"brand_name", "description"=>"desc", "weight"=>"weight", "quantity you aleady have,"=>"quantity", "SKU"=>"sku", "date you last ordered"=>"last_ordered", "date you last received"=>"last_received"}
+
+                    #Getting the parents...
+                    while dept == nil do
+                        puts "Please input the name of the department EXACTLY."
+                        input = gets.strip
+                        dept = Department.find_by_name(input)
+                        if dept == nil
+                            puts "Could not find that department, please check spelling."
+                        else
+                            break
+                        end
+                    end
+                    while categ == nil
+                        puts "Please input the name of the category EXACTLY."
+                        input = gets.strip
+                        categ = dept.find_category(Category.find_by_name(input))
+                        if categ == nil
+                            puts "Could not find that department, please check spelling."
+                        else
+                            attributes["category"] = categ
+                            break
+                        end
+                    end
+                    if categ.sub_categories != nil
+                        while sub_categ == nil do
+                            puts "Please input the name of the sub-category in that category."
+                            input = gets.strip
+
+                            sub_categ = Sub_Category.find_by_name(input)
+
+                            if sub_categ != nil && sub_categ.category == categ
+                                attributes["sub_category"] = sub_categ
+                                break
+                            else #when the subcategory does not belong to the category
+                                sub_categ = nil
+                                puts "Could not find that sub-category. Make sure its a sub-category of the category you already chose."
+                            end
+                        end
+                    end
+
+                    #Assigning the items information.
+                    method_names.each do |name, method|
+                        puts "Please input the #{name} of the item. If you want to skip this input, just leave it blank and hit enter."
+                        input = gets.strip
+                        input = Integer(input) if method == "quantity"
+                        attributes[method] = input
+                    end
+
+                    created_item = @manager.create_item(attributes)
+
+                    #This will force view the new item.
+                    @available_commands = ["focus item(#{created_item.object_id})"]
+                    @keep_commands = true
+                    @force_input = {"1"=>1}
+
+                    break
+
+                when "2"
+
+                    while dept == nil do
+                        puts "Please input the name of the department EXACTLY."
+                        input = gets.strip
+                        dept = Department.find_by_name(input)
+                        if dept == nil
+                            puts "Could not find that department, please check spelling."
+                        else
+                            break
+                        end
+                    end
+                    while categ == nil
+                        puts "Please input the name of the category EXACTLY."
+                        input = gets.strip
+                        categ = dept.find_category(Category.find_by_name(input))
+                        if categ == nil
+                            puts "Could not find that department, please check spelling."
+                        elsif categ.sub_categories == nil
+                            puts "Sorry, you must choose a category with existing sub-categories."
+                        else
+                            attributes["category"] = categ
+                            break
+                        end
+                    end
+
+                    puts "Please input the name of the sub-category you wish to make."
+                    input = gets.strip
+                    attributes["name"] = input
+
+                    created_sub_categ = @manager.create_sub_category(attributes) 
+                    
+                    puts "Created new Sub-Category named: #{created_sub_categ.name}."
+                    break
+
+                when "3"
+                    while dept == nil do
+                        puts "Please input the name of the department EXACTLY."
+                        input = gets.strip
+                        dept = Department.find_by_name(input)
+                        if dept == nil
+                            puts "Could not find that department, please check spelling."
+                        else
+                            attributes["department"] = dept
+                            break
+                        end
+                    end
+
+                    puts "Please input the name of the category you wish to make."
+                    input = gets.strip
+                    attributes["name"] = input
+
+                    created_categ = @manager.create_category(attributes) 
+
+                    puts "Created new Category named: #{created_categ.name}."
+                    break
+
+                when "4"
+                    puts "Please input the name of the department you wish to make."
+                    input = gets.strip
+                    attributes["name"] = input
+
+                    created_dept = @manager.create_department(attributes) 
+
+                    puts "Created new Department named: #{created_dept.name}."
+                    break
+
+                end#end of case
+                if input == "done"
+                    puts "Exiting 'add to database'\nPlease use home."
+                    break
+                end
+            end
+        end
+
         def rename
             object = @manager.find_object(@command_history[@command_index].values[0])
             puts "Enter new name:"
@@ -393,7 +554,7 @@ class Interface_Controller
                     input = gets.strip
 
                     sub_categ = Sub_Category.find_by_name(input)
-                    if sub_categ.category == categ
+                    if sub_categ != nil && sub_categ.category == categ
                         item.sub_category = sub_categ
                         item.category = categ
                         puts "Changed location to: #{dept.name}: #{categ.name}: #{sub_categ.name}. \nPlease use home to return to the home page."
@@ -449,9 +610,25 @@ class Interface_Controller
                 end
                 break if input == "done"
             end
-
-
         end
+
+        def delete
+            object = @manager.find_object(@command_history[@command_index].values[0])
+            puts "Once deleted, #{object.name} cannot be recovered. If you are deleting a department or category, all items in them will be deleted too."
+            puts "Are you sure you want to delete #{object.name}? type yes or no"
+
+            input = gets.strip
+
+            if input == "yes"
+                @manager.delete_object(object)
+                puts "Deleted #{object.name}. Please type home."
+            elsif input == "no"
+                puts "Canceling delete, Please type home or back."
+            else
+                puts "Please enter yes or no."
+            end
+        end
+
 
     end#endof module
     
