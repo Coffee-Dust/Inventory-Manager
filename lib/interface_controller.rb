@@ -35,12 +35,13 @@ class Interface_Controller
             @available_commands.clear
 
             case @command_history.last
-            when "focus_object"
-                @available_commands = ["back, rename"]
+            #Add a method name here if method does not have params(not a hash in @command_history)
             when "view_current_order"
                 @available_commands = ["placed order", "delete order"]
                 
             else
+                #The default section, also checks for methods with params otherwise known as hashes
+                #                                                               in command history.
                 @available_commands = ["view low inventory", "view current order", "received shipment", "find items", "view all departments", "add to database"]
 
                 if @command_history.last.is_a? Hash
@@ -49,6 +50,7 @@ class Interface_Controller
 
                     when "focus_department"
                         @available_commands = ["view categories", "rename", "back", "delete"]
+
                     when "focus_category"
                         @available_commands = ["rename", "back", "delete"]
                         #This finds out whether the category has items or not and adds the right method to commands
@@ -59,10 +61,13 @@ class Interface_Controller
                         elsif categ.items != nil
                             @available_commands << "view items"
                         end
+
                     when "focus_subcategory"
                         @available_commands = ["view items", "rename", "back", "delete"]
+
                     when "focus_item"
                         @available_commands = ["received this item", "add to current order", "rename", "change location", "change info", "delete"]
+
                     else
                         @available_commands = ["back"]
                     end
@@ -73,6 +78,8 @@ class Interface_Controller
     end
 
     def call_method_from_input(input)
+        #If there is a @forceinput, this assigns it to input to be used.
+        #also subtracts the number of loops it will skip.
         if @force_input.values[0] != 0
             input = @force_input.keys[0]
             @force_input[@force_input.keys[0]] -= 1
@@ -81,8 +88,10 @@ class Interface_Controller
         @command_history.clear if input == "home"
 
         begin
+            #This checks input is a number, if it is, it selects the number in @available_commands.
             number = Integer(input)
             sending = @available_commands[number - 1].split(" ").join("_")
+            #This checks if the method has params, if so it will send with those params
             if sending.include? "("
                 #REGEX seperates the input method into sendable data.
                 self.send(sending.scan(/^[a-z _]*/)[0], sending.scan(/\d[^ ()]*/)[0])
@@ -92,17 +101,19 @@ class Interface_Controller
                 @command_history << sending
             end
         rescue => exception
+            #input is number failed, so input is not a number.
+            #Now it sends the method using its name...
 
             name = input.split(" ").join("_")
             begin
                 self.send(name)
                 @command_history << name if name != "list" && name != "back"
             rescue => exception
-                puts exception
-                binding.pry
+                #All inputs failed, command is not available
 
+                #view methods need to keep there commands when called again, such as with back.
                 @keep_commands = true if @command_history.last.include? "view"
-                # @keep_commands = true
+
                 puts "Could not find command. Please use 'list' or make sure you spelled the command EXACTLY as is. \nOr make sure you selected a number within the range of options."
             end
         end
@@ -134,16 +145,6 @@ class Interface_Controller
         return string.split(",")[0]
     end
 
-    def view_commands_one_line
-        commands = @available_commands.collect.with_index do |c,i|
-            if i == @available_commands.length - 1
-                "#{i + 1}. #{c}" 
-            else
-                "#{i + 1}. #{c}, "
-            end
-        end
-        puts commands.join()
-    end
 
 
 
