@@ -5,9 +5,6 @@ class Inventory_Manager
         puts "Starting Inventory Manager..."
         @dbc = Database_Controller.new(self)
         @current_order = []
-        Item.all[123].last_ordered = Time.new(2018, 10, 28)
-        Item.all[23].last_ordered = Time.new(2018, 11, 8)
-        Item.all[23].last_received = Time.new(2018, 11, 28)
     end
 
     def get_lowest_quantity
@@ -26,7 +23,7 @@ class Inventory_Manager
         end
     end
 
-    #--------Ordering methods------------
+    #--------Ordering methods------------#
 
     def place_current_order
         current_order.each do |hash|
@@ -70,9 +67,23 @@ class Inventory_Manager
         item.quantity += quantity
     end
     
-    #--------Creating methods------------
+    #--------Creating methods------------#
+    def create_item(attr)
+        item = Item.create_from_hash(attr)
+    end
 
-    #--------Deleting methods------------
+    def create_sub_category(attr)
+        sub_categ = Sub_Category.create_from_hash(attr)
+    end
+
+    def create_category(attr)
+        categ = Category.create_from_hash(attr)
+    end
+
+    def create_department(attr)
+        dept = Department.create_from_hash(attr)
+    end
+    #--------Deleting methods------------#
 
     def delete_object(object)
         case object
