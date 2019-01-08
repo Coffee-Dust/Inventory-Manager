@@ -398,7 +398,7 @@ class Interface_Controller
                         input = gets.strip
                         categ = dept.find_category(Category.find_by_name(input))
                         if categ == nil
-                            puts "Could not find that department, please check spelling."
+                            puts "Could not find that category, please check spelling."
                         else
                             attributes["category"] = categ
                             break
@@ -422,7 +422,7 @@ class Interface_Controller
                     end
 
                     #Assigning the items information.
-                    method_names.each do |name, method|
+                    item_method_names.each do |name, method|
                         puts "Please input the #{name} of the item. If you want to skip this input, just leave it blank and hit enter."
                         input = gets.strip
                         input = Integer(input) if method == "quantity"
@@ -556,7 +556,7 @@ class Interface_Controller
                     sub_categ = Sub_Category.find_by_name(input)
                     if sub_categ != nil && sub_categ.category == categ
                         item.sub_category = sub_categ
-                        item.category = categ
+                        # item.category = categ #BUGFIX?: CODE C001
                         puts "Changed location to: #{dept.name}: #{categ.name}: #{sub_categ.name}. \nPlease use home to return to the home page."
                         break
                     else #when the subcategory does not belong to the category
