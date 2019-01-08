@@ -139,7 +139,7 @@ class Inventory_Manager
         when Sub_Category
             while Item.all.detect {|i| i.sub_category == object} != nil
                 Item.all.each.with_index do |item,i|
-                    if item.department == object
+                    if item.sub_category == object
                         remove_object_ref(item)
                         Item.all[i] = nil
                         Item.all.delete_at(i)
