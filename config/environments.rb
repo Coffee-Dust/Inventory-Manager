@@ -55,6 +55,9 @@ class ENVIRONMENTS
       input = gets.strip
       while input != "exit"
         case input
+
+          when "scrape new data"
+            scrape_new_data
           when "pry"
             start_pry
           when "reload"
@@ -88,6 +91,28 @@ class ENVIRONMENTS
       im = Inventory_Manager.new
       ic = Interface_Controller.new(im)
       ic.start_program_loop
+    end
+
+    def scrape_new_data
+      puts "Scraping new data will require about 3-5 mins. \nIt will also overwrite any previous data you have local or on the save file."
+
+      while true do
+        puts "Are you sure you want to continue? yes/no"
+        input = gets.strip
+        if input == "yes"
+          File.truncate("db/saves/save.json", 0)
+          dbc = Database_Controller.new(nil)
+
+          s = Scraper.new
+          s.create_database
+          dbc.create_data_from_scraper_hash(s.database)
+          dbc.save_data_to_json
+          puts "Database successfully saved to json file. Please use ctrl+c to exit."
+          break
+        elsif input == "no"
+          break
+        end
+      end
     end
 
     def reload!
@@ -126,7 +151,7 @@ class ENVIRONMENTS
     end
 
     def list
-      list = ["pry", "reload", "rspec", "test"]
+      list = ["scrape new data", "pry", "reload", "rspec", "test"]
       list.each.with_index do |item, index|
         puts "#{index + 1}. #{item}"
       end
