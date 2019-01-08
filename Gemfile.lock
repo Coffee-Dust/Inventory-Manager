@@ -2,6 +2,9 @@ PATH
   remote: .
   specs:
     inventory_manager (0.1.0)
+      colorize
+      json
+      require_all
 
 GEM
   remote: https://rubygems.org/
