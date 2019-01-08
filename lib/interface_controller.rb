@@ -121,7 +121,7 @@ class Interface_Controller
 
 
     def color_quantity(number)
-        if number > 130
+        if number >= 130
             return number.to_s.colorize(:green)
         else
             case number
