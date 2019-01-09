@@ -4,7 +4,6 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 # Specify your gem's dependencies in inventory_manager.gemspec
 gemspec
-require "~/Quorra.rb"
 require "open-uri"
 
 gem "colorize"

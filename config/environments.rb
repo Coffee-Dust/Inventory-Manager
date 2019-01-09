@@ -84,7 +84,6 @@ class ENVIRONMENTS
     def start_pry
       binding.pry
       puts "Welcome back! Now input a command fewl!"
-      Quorra.say("Welcome back, now input a command fool")
     end
 
     def start_program_cli
