@@ -1,20 +1,10 @@
 # InventoryManager
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/inventory_manager`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Inventory Manager can do a lot! Keep track of your stores inventory in a structure of departments, categories, sub-categories and items! Use the many commands available to alter, add, delete, keep track of inventory or see when you ordered your items. 
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'inventory_manager'
-```
-
-And then execute:
-
-    $ bundle
+Until I know how to get the gem working, please install this application by cloning to a desired file location, then CD into that directory, and then run `bundler install`. 
 
 Or install it yourself as:
 
@@ -22,7 +12,8 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+To start: make sure you are in the directory, then run `bin/start`
+To exit: Type `exit program`
 
 ## Development
 
