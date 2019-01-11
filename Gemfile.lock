@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    inventory_manager (0.1.0)
+    inventory_manager (0.1.1)
       colorize
       json
       require_all
@@ -12,7 +12,7 @@ GEM
     coderay (1.1.2)
     colorize (0.8.1)
     diff-lcs (1.3)
-    json (1.8.3.1)
+    json (1.8.3)
     method_source (0.9.0)
     mini_portile2 (2.3.0)
     nokogiri (1.8.4)
