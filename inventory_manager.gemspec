@@ -1,11 +1,10 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "inventory_manager/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "inventory_manager"
-  spec.version       = InventoryManager::VERSION
+  spec.version       = "0.0.7"
   spec.authors       = ["Coffee Dust"]
   spec.email         = ["coffeedust.io@outlook.com"]
 
