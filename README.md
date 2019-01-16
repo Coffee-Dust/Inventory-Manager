@@ -12,7 +12,7 @@ Or install it yourself as:
 
 ## Usage
 
-To start: make sure you are in the directory, then run `bin/start`
+To start: make sure you are in the directory, then run `bin/inventory_manager_start`
 To exit: Type `exit program`
 
 ## Development
