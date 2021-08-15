@@ -24,5 +24,4 @@ puts '
 '
 
 #Chose which environment you want to load.
-ENVIRONMENTS.select_environment(self)
-
+# ENVIRONMENTS.select_environment(self)
