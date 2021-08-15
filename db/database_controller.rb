@@ -1,7 +1,7 @@
 class Database_Controller
     def initialize(base)
-
-        if File.zero?("db/saves/save.json")
+      @save_file_location = "#{__dir__}/saves/save.json"
+        if File.zero?(@save_file_location)
             puts "Save file is empty. Please add inventory by using the \'add to database\' command."
         else
             self.load_data_from_json
@@ -41,7 +41,7 @@ class Database_Controller
         puts "Are you sure you want to delete the ENTIRE database save? y/n"
         input = gets.strip
         if input == "y" || input == "yes"
-            File.truncate("db/saves/save.json", 0)
+            File.truncate(@save_file_location, 0)
             puts "Save file deleted!"
         end
     end
@@ -104,7 +104,7 @@ class Database_Controller
     end
 
     def load_data_from_json
-        file = File.read("db/saves/save.json")
+        file = File.read(@save_file_location)
         data_hash = JSON.parse(file)
 
         data_hash["department"].each do |department|
@@ -159,9 +159,9 @@ class Database_Controller
     def save_data_to_json
         hash = generate_hash_from_object_data
 
-        File.truncate("db/saves/save.json", 0)
+        File.truncate(@save_file_location, 0)
 
-        File.write("db/saves/save.json",hash.to_json)
+        File.write(@save_file_location, hash.to_json)
 
 
     end
