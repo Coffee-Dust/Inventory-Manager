@@ -2,7 +2,7 @@ class Interface_Controller
 
     module COMMANDS
         def home
-            puts "\n\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
             puts '
 ██╗  ██╗ ██████╗ ███╗   ███╗███████╗
 ██║  ██║██╔═══██╗████╗ ████║██╔════╝
@@ -219,7 +219,7 @@ class Interface_Controller
 
             puts "\n\n  Department: #{item.department.name}\n  Category: #{item.category.name}\n"
 
-            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n\n\n\n\n"
             puts "Available commands:\n1. received this item, 2. add to current order 3. rename, 4. change location, 5. change info, 6. delete"
         end
 
@@ -238,7 +238,7 @@ class Interface_Controller
                 @available_commands << "focus item(#{item.object_id})"
             end
             @keep_commands = true
-            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n\n\n\n\n"
             puts "Available commands:\nType selection of item you want to view and order."
         end
 
@@ -297,7 +297,7 @@ class Interface_Controller
                 end
             end
 
-            puts "\n\n\n\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n\n\n\n\n"
             puts "Available commands:\n1. placed order, 2. delete order"
         end
 
@@ -329,7 +329,7 @@ class Interface_Controller
             large_text("received_shipment")
             puts "NOTE: You will enter the item by SKU and then the quantity. When you are finished, type 'done'"
 
-            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 
             while true do
                 puts "Enter the SKU and then the quantity in this format: SKU:QUANTITY\nType done when finished."
@@ -369,7 +369,7 @@ class Interface_Controller
             large_text("add_data")
             puts "NOTE: You can add-on to existing Departments and Categories, or you can create new ones."
 
-            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n\n\n\n\n"
             
             puts "Type done when finished."
             puts "Available commands:\n1. create new item, 2. create new sub-category 3. create new category, 4. create new department"
