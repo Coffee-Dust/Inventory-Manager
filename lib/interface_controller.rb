@@ -112,9 +112,7 @@ class Interface_Controller
                 #All inputs failed, command is not available
 
                 #view methods need to keep there commands when called again, such as with back.
-                if @command_history.last && @command_history.last.include?("view")
-                  @keep_commands = true 
-                end
+                @keep_commands = true if @command_history.last.include?("view")
 
                 puts "Could not find command. Please use 'list' or make sure you spelled the command EXACTLY as is. \nOr make sure you selected a number within the range of options."
             end
