@@ -55,7 +55,7 @@ class Interface_Controller
             end
             
 
-            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n\n\n\n\n"
             puts "Commands:"
             puts "1. View low inventory, 2. View current order, 3. Received Order, 4. Find items, 5. View all departments, 6. Add to database"
             puts "or use 'list' to view all available commands."
@@ -297,7 +297,7 @@ class Interface_Controller
                 end
             end
 
-            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n\n\n\n\n\n\n\n"
             puts "Available commands:\n1. placed order, 2. delete order"
         end
 
@@ -369,7 +369,7 @@ class Interface_Controller
             large_text("add_data")
             puts "NOTE: You can add-on to existing Departments and Categories, or you can create new ones."
 
-            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n"
             
             puts "Type done when finished."
             puts "Available commands:\n1. create new item, 2. create new sub-category 3. create new category, 4. create new department"
