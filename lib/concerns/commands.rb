@@ -15,7 +15,7 @@ class Interface_Controller
 
             low_items = @manager.get_lowest_quantity
 
-            puts "\n\n\n\nLow Inventory: Order soon!".colorize(:light_red)
+            puts "\n\nLow Inventory: Order soon!".colorize(:light_red)
             begin
                 puts "#{low_items[0].department.name}: #{cut_off_after_comma(low_items[0].name)}: #{color_quantity(low_items[0].quantity)} | #{low_items[1].department.name}: #{cut_off_after_comma(low_items[1].name)}: #{color_quantity(low_items[1].quantity)} | #{low_items[2].department.name}: #{cut_off_after_comma(low_items[2].name)}: #{color_quantity(low_items[2].quantity)}"
             rescue => exception
@@ -34,7 +34,7 @@ class Interface_Controller
 
             soon_items = @manager.get_soon_to_be_received
 
-            puts "\n\n\n\n\n\n\n\nItems soon to be received:".colorize(:green)
+            puts "\n\n\n\nItems soon to be received:".colorize(:green)
             puts "Format; Department: Item: Date ordered"
             puts ""
 
@@ -55,7 +55,7 @@ class Interface_Controller
             end
             
 
-            puts "\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n"
             puts "Commands:"
             puts "1. View low inventory, 2. View current order, 3. Received Order, 4. Find items, 5. View all departments, 6. Add to database"
             puts "or use 'list' to view all available commands."
@@ -118,7 +118,7 @@ class Interface_Controller
                 puts "   #{cat.name}"
             end
 
-            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n\n\n\n\n"
             puts "Available commands:\n1. View categories, 2. rename, 3. back, 4. delete"
         end
 
@@ -147,7 +147,7 @@ class Interface_Controller
                     categ.sub_categories.each do |subcat|
                         puts "   #{subcat.name}"
                     end
-                    puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                    puts "\n\n\n\n\n\n\n\n\n\n\n\n\n"
                     puts "Available commands:\n1. rename, 2. back, 3. delete, 4. view subcategories"
                 else
 
@@ -156,7 +156,7 @@ class Interface_Controller
                         break if i >= 15
                         puts "   #{item.name}"
                     end
-                    puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                    puts "\n\n\n\n\n\n\n\n\n\n\n\n"
                     puts "Available commands:\n1. rename, 2. back, 3. delete, 4. view items"
                 end
             rescue => exception
@@ -189,7 +189,7 @@ class Interface_Controller
                 puts "   #{item.name}"
             end
 
-            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
             puts "Available commands:\n1. view items, 2. rename, 3. back, 4. delete"
         end
 
