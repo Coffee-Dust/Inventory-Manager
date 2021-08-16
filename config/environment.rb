@@ -2,8 +2,8 @@ require "bundler/setup"
 require_relative "./environments.rb"
 Bundler.require(:default)
 
-require_rel "lib"
-require_rel "db"
+require_rel "../lib"
+require_rel "../db"
 
 
 puts '
