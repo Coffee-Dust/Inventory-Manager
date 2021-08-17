@@ -7,6 +7,12 @@ class Inventory_Manager
         @current_order = []
     end
 
+    def save_data_to_file
+      puts "Saving all data to database save file."
+      @dbc.save_data_to_json
+      puts "Saved data and exiting. Goodbye \\o/"
+    end
+
     def get_lowest_quantity
         Item.all.sort do |a,b|
             a.quantity <=> b.quantity
