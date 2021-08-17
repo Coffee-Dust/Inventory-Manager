@@ -7,7 +7,7 @@ class Inventory_Manager
         @current_order = []
     end
 
-    def save_data_to_file
+    def save_data_on_exit
       puts "Saving all data to database save file."
       @dbc.save_data_to_json
       puts "Saved data and exiting. Goodbye \\o/"
