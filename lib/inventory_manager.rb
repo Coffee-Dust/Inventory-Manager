@@ -8,14 +8,14 @@ class Inventory_Manager
     end
 
     def save_data_on_exit
-      if Thread.current.thread_variable_get("JSON_SAVED_ON_EXIT") == nil
-        puts "Saving all data to database save file."
-        @dbc.save_data_to_json
-        Thread.current.thread_variable_set("JSON_SAVED_ON_EXIT", true)
-        puts "Saved data and exiting. Goodbye \\o/"
-      else
-        puts "Data already saved, no need to save it twice."
-      end
+      @dbc.save_data_to_json
+      # if Thread.current.thread_variable_get("JSON_SAVED_ON_EXIT") == nil
+      #   puts "Saving all data to database save file."
+      #   Thread.current.thread_variable_set("JSON_SAVED_ON_EXIT", true)
+      #   puts "Saved data and exiting. Goodbye \\o/"
+      # else
+      #   puts "Data already saved, no need to save it twice."
+      # end
     end
 
     def get_lowest_quantity
