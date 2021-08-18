@@ -115,8 +115,4 @@ class Scraper
             puts "Load time was: #{Time.now - Thread.current.thread_variable_get("time")} seconds"
         end
     end
-
-    def pry
-        binding.pry
-    end
 end

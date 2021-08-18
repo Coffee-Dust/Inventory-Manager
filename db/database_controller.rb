@@ -8,17 +8,17 @@ class Database_Controller
             puts "Successfully loaded database from save."
         end
 
-        # base.send("at_exit") do
-        #     puts "Saving all data to database save file."
-        #     #BUGFIX: To prevent saving twice in the case of on-exit being called twice.
-        #     if Thread.current.thread_variable_get("JSON_SAVED_ON_EXIT") == nil && ENV["APP_ENV"] == "DEFAULT"
-        #         self.save_data_to_json
-        #         Thread.current.thread_variable_set("JSON_SAVED_ON_EXIT", true)
-        #         puts "Saved data and exiting. Goodbye \\o/"
-        #     else
-        #         puts "Data already saved, no need to save it twice."
-        #     end
-        # end
+        base.send("at_exit") do
+            puts "Saving all data to database save file."
+            #BUGFIX: To prevent saving twice in the case of on-exit being called twice.
+            if Thread.current.thread_variable_get("JSON_SAVED_ON_EXIT") == nil && ENV["APP_ENV"] == "DEFAULT"
+                self.save_data_to_json
+                Thread.current.thread_variable_set("JSON_SAVED_ON_EXIT", true)
+                puts "Saved data and exiting. Goodbye \\o/"
+            else
+                puts "Data already saved, no need to save it twice."
+            end
+        end
     end
 
 
@@ -156,9 +156,13 @@ class Database_Controller
     def save_data_to_json
         hash = generate_hash_from_object_data
 
-        File.truncate(@save_file_location, 0)
+        # File.truncate(@save_file_location, 0)
+        File.open(@save_file_location, 'w') {|file| 
+          file.truncate(0) 
+          file.write(hash.to_json)
+        }
 
-        File.write(@save_file_location, hash.to_json)
+        # File.write(@save_file_location, hash.to_json)
 
 
     end

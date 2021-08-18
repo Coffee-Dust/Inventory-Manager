@@ -82,7 +82,7 @@ class ENVIRONMENTS
     end
 
     def start_pry
-      binding.pry
+      # binding.pry
       puts "Welcome back! Now input a command fewl!"
     end
 

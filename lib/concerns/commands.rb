@@ -340,7 +340,6 @@ class Interface_Controller
                     split = input.split(":")
                     @manager.received_item(Item.find_by_SKU(split[0]), Integer(split[1]))
                 rescue => exception
-                    binding.pry
                     puts "Error: Remember no spaces, input exactly as SKU:QUANTITY"
                 end
             end

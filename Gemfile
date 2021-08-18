@@ -12,6 +12,6 @@ gem "nokogiri"
 gem "json"
 
 group :dev do
-  gem "pry"
+  # gem "pry"
   gem "rspec", "~> 3.6"
 end

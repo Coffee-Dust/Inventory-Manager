@@ -267,9 +267,5 @@ class Inventory_Manager
         end
 
     end
-
-    def pry
-        binding.pry
-    end
     
 end

@@ -236,7 +236,4 @@ class Interface_Controller
         end
     end
 
-    def pry
-        binding.pry
-    end
 end
