@@ -94,8 +94,8 @@ class Interface_Controller
             #This checks if the method has params, if so it will send with those params
             if sending.include? "("
                 #REGEX seperates the input method into sendable data.
-                self.send(sending.scan(/^[a-z _]*/)[0], sending.scan(/\d[^ ()]*/)[0])
-                @command_history << {sending.scan(/^[a-z _]*/)[0]=>sending.scan(/\d[^ ()]*/)[0]}
+                self.send(sending.scan(/^[a-z _]*/)[0], sending.scan(/[- 1-9][^ ()]*/)[0])
+                @command_history << {sending.scan(/^[a-z _]*/)[0]=>sending.scan(/[- 1-9][^ ()]*/)[0]}
             else
                 self.send(sending)
                 @command_history << sending
